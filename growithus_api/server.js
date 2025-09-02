@@ -19,7 +19,7 @@ app.use(express.json());
 // It's recommended to use environment variables for these
 
 const pool = new Pool({
-  user: 'growwithus',
+  user: 'postgres',
   password: 'Ritik@123',
   host: 'localhost',
   port: 5432,
