@@ -6,7 +6,7 @@ import UserLayout from './layouts/UserLayout';
 import AdminLayout from './layouts/AdminLayout';
 
 // Standalone Pages
-import LandingPage from './pages/LandingPage'; // New
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import TermsOfService from './pages/TermsOfService';
@@ -36,7 +36,7 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Routes>
           {/* Standalone Routes */}
-          <Route path="/" element={<LandingPage />} /> {/* Changed */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
@@ -60,8 +60,8 @@ function App() {
             <Route path="/admin/investments" element={<AdminInvestments />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/email" element={<AdminEmail />} />
-            <Route path="/admin/file-manager" element={<FileManager />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/file-manager" element={<FileManager />} />
           </Route>
         </Routes>
       </div>

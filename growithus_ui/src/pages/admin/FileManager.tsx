@@ -1,526 +1,384 @@
-import React, { useState, useRef } from 'react';
-import { Upload, File, FileText, Search, Filter, Download, Trash2, Eye, Calendar, ArrowUpDown } from 'lucide-react';
+import React, { useState, useMemo, useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { UploadCloud, File as FileIcon, Trash2, Search, ChevronDown, ChevronUp, X, CheckCircle, AlertTriangle } from 'lucide-react';
 
-interface FileData {
+// Types
+interface ParsedFile {
   id: string;
   name: string;
   size: number;
-  uploadDate: Date;
   type: 'excel' | 'csv';
-  data: any[][];
+  uploadDate: Date;
+  data: any[];
   headers: string[];
 }
 
 interface Notification {
-  id: string;
+  id: number;
   type: 'success' | 'error';
   message: string;
 }
 
-const FileManager = () => {
-  const [activeTab, setActiveTab] = useState<'upload' | 'library' | 'viewer'>('upload');
-  const [files, setFiles] = useState<FileData[]>([]);
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+const FileManager: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'upload' | 'library'>('upload');
+  const [files, setFiles] = useState<ParsedFile[]>([]);
+  const [selectedFile, setSelectedFile] = useState<ParsedFile | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'size'>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortConfig, setSortConfig] = useState<{ key: keyof ParsedFile; direction: 'asc' | 'desc' } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [globalSearch, setGlobalSearch] = useState('');
-  const [columnFilters, setColumnFilters] = useState<{[key: string]: string}>({});
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(null);
 
-  const rowsPerPage = 50;
+  // Data Viewer State
+  const [dataSearch, setDataSearch] = useState('');
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [dataSortConfig, setDataSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ROWS_PER_PAGE = 50;
 
   const addNotification = (type: 'success' | 'error', message: string) => {
-    const id = Date.now().toString();
+    const id = Date.now();
     setNotifications(prev => [...prev, { id, type, message }]);
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
     }, 4000);
   };
 
-  const parseFile = async (file: File): Promise<{ data: any[][], headers: string[] }> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      
-      reader.onload = (e) => {
-        try {
-          const data = e.target?.result;
-          
-          if (file.name.endsWith('.csv')) {
-            Papa.parse(data as string, {
-              complete: (result) => {
-                const headers = result.data[0] as string[];
-                const rows = result.data.slice(1) as any[][];
-                resolve({ data: rows, headers });
-              },
-              error: (error) => reject(error)
-            });
-          } else {
-            const workbook = XLSX.read(data, { type: 'binary' });
+  const handleFileUpload = useCallback(async (uploadedFiles: FileList) => {
+    setIsUploading(true);
+    let successCount = 0;
+    for (const file of Array.from(uploadedFiles)) {
+      const fileType = file.name.endsWith('.csv') ? 'csv' : 'excel';
+      if (fileType !== 'csv' && !file.name.match(/\.(xlsx|xls)$/)) {
+        addNotification('error', `Unsupported file type: ${file.name}`);
+        continue;
+      }
+
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result;
+          let data: any[] = [];
+          let headers: string[] = [];
+
+          if (fileType === 'excel' && content) {
+            const workbook = XLSX.read(content, { type: 'binary' });
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
-            const headers = jsonData[0] as string[];
-            const rows = jsonData.slice(1);
-            resolve({ data: rows, headers });
+            data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            headers = data.length > 0 ? data[0] : [];
+            data = XLSX.utils.sheet_to_json(worksheet);
+          } else if (fileType === 'csv' && content) {
+            Papa.parse(content as string, {
+              header: true,
+              skipEmptyLines: true,
+              complete: (results) => {
+                data = results.data;
+                headers = results.meta.fields || [];
+              },
+            });
           }
-        } catch (error) {
-          reject(error);
-        }
-      };
-      
-      if (file.name.endsWith('.csv')) {
-        reader.readAsText(file);
-      } else {
-        reader.readAsBinaryString(file);
-      }
-    });
-  };
 
-  const handleFileUpload = async (uploadedFiles: FileList) => {
-    setIsUploading(true);
-    
-    try {
-      const newFiles: FileData[] = [];
-      
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        const file = uploadedFiles[i];
-        
-        if (!file.name.match(/\.(xlsx|xls|csv)$/)) {
-          addNotification('error', `${file.name} is not a supported file type`);
-          continue;
-        }
-        
-        const { data, headers } = await parseFile(file);
-        
-        const newFile: FileData = {
-          id: Date.now().toString() + i,
-          name: file.name,
-          size: file.size,
-          uploadDate: new Date(),
-          type: file.name.endsWith('.csv') ? 'csv' : 'excel',
-          data,
-          headers
+          setFiles(prev => [...prev, {
+            id: `${Date.now()}-${file.name}`,
+            name: file.name,
+            size: file.size,
+            type: fileType,
+            uploadDate: new Date(),
+            data,
+            headers,
+          }]);
+          successCount++;
         };
-        
-        newFiles.push(newFile);
+        reader.readAsBinaryString(file);
+      } catch (error) {
+        addNotification('error', `Failed to process ${file.name}.`);
       }
-      
-      setFiles(prev => [...prev, ...newFiles]);
-      addNotification('success', `Successfully uploaded ${newFiles.length} file(s)`);
-      
-    } catch (error) {
-      addNotification('error', 'Error uploading files');
-    } finally {
+    }
+    
+    setTimeout(() => {
       setIsUploading(false);
+      if (successCount > 0) {
+        addNotification('success', `${successCount} file(s) uploaded successfully!`);
+        setActiveTab('library');
+      }
+    }, 1000); // Simulate upload time
+  }, []);
+
+  const handleDeleteFile = (fileId: string) => {
+    setFiles(files.filter(f => f.id !== fileId));
+    setDeleteConfirmation(null);
+    if (selectedFile?.id === fileId) {
+      setSelectedFile(null);
     }
+    addNotification('success', 'File deleted successfully.');
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const droppedFiles = e.dataTransfer.files;
-    if (droppedFiles.length > 0) {
-      handleFileUpload(droppedFiles);
+  const filteredFiles = useMemo(() => {
+    let sortableFiles = [...files];
+    if (sortConfig !== null) {
+      sortableFiles.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
     }
-  };
+    return sortableFiles.filter(file => file.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [files, searchTerm, sortConfig]);
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const filteredFiles = files.filter(file =>
-    file.name.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => {
-    let comparison = 0;
-    
-    switch (sortBy) {
-      case 'name':
-        comparison = a.name.localeCompare(b.name);
-        break;
-      case 'date':
-        comparison = a.uploadDate.getTime() - b.uploadDate.getTime();
-        break;
-      case 'size':
-        comparison = a.size - b.size;
-        break;
-    }
-    
-    return sortOrder === 'asc' ? comparison : -comparison;
-  });
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const deleteFile = (id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id));
-    addNotification('success', 'File deleted successfully');
-    setShowDeleteConfirm(null);
-  };
-
-  const getFilteredData = () => {
+  // Data Viewer Logic
+  const filteredData = useMemo(() => {
     if (!selectedFile) return [];
     
-    return selectedFile.data.filter(row => {
-      const matchesGlobalSearch = globalSearch === '' || 
-        row.some((cell: any) => 
-          cell?.toString().toLowerCase().includes(globalSearch.toLowerCase())
+    let data = selectedFile.data;
+
+    // Global search
+    if (dataSearch) {
+      data = data.filter(row => 
+        Object.values(row).some(value => 
+          String(value).toLowerCase().includes(dataSearch.toLowerCase())
+        )
+      );
+    }
+
+    // Column filters
+    Object.entries(columnFilters).forEach(([key, value]) => {
+      if (value) {
+        data = data.filter(row => 
+          String(row[key]).toLowerCase().includes(value.toLowerCase())
         );
-      
-      const matchesColumnFilters = Object.entries(columnFilters).every(([colIndex, filter]) => {
-        if (!filter) return true;
-        const cellValue = row[parseInt(colIndex)]?.toString().toLowerCase() || '';
-        return cellValue.includes(filter.toLowerCase());
-      });
-      
-      return matchesGlobalSearch && matchesColumnFilters;
+      }
     });
+
+    // Sorting
+    if (dataSortConfig) {
+      data.sort((a, b) => {
+        const aVal = a[dataSortConfig.key];
+        const bVal = b[dataSortConfig.key];
+        if (aVal < bVal) return dataSortConfig.direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return dataSortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return data;
+  }, [selectedFile, dataSearch, columnFilters, dataSortConfig]);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+    return filteredData.slice(startIndex, startIndex + ROWS_PER_PAGE);
+  }, [filteredData, currentPage]);
+
+  const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+
+  const requestSort = (key: keyof ParsedFile) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+  
+  const requestDataSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (dataSortConfig && dataSortConfig.key === key && dataSortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setDataSortConfig({ key, direction });
+    setCurrentPage(1);
   };
 
-  const filteredData = getFilteredData();
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
+  const UploadComponent = () => (
+    <div
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault();
+        handleFileUpload(e.dataTransfer.files);
+      }}
+      className="mt-6 border-2 border-dashed border-emerald-300 rounded-lg p-12 text-center hover:border-emerald-400 transition-colors"
+    >
+      <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <UploadCloud className="h-8 w-8" />
+      </div>
+      <p className="mt-4 text-lg font-semibold text-gray-700">Drag & drop files here</p>
+      <p className="mt-1 text-sm text-gray-500">or</p>
+      <label htmlFor="file-upload" className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 cursor-pointer">
+        Browse files
+      </label>
+      <input id="file-upload" type="file" className="hidden" multiple onChange={(e) => e.target.files && handleFileUpload(e.target.files)} accept=".csv, .xlsx, .xls" />
+      <p className="mt-4 text-xs text-gray-400">Supported formats: CSV, XLSX, XLS</p>
+      {isUploading && <p className="mt-4 text-emerald-600 animate-pulse">Processing files...</p>}
+    </div>
+  );
+
+  const LibraryComponent = () => (
+    <div className="mt-6">
+      <div className="flex justify-between items-center mb-4">
+        <div className="relative w-full max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search files..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredFiles.map(file => (
+          <div key={file.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+            <div>
+              <div className="flex items-center mb-3">
+                <div className={`flex-shrink-0 h-10 w-10 rounded-lg flex items-center justify-center ${file.type === 'excel' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                  <FileIcon className="h-6 w-6" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-800 truncate" title={file.name}>{file.name}</p>
+                  <p className="text-xs text-gray-500">{(file.size / 1024).toFixed(2)} KB</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500">Uploaded: {file.uploadDate.toLocaleDateString()}</p>
+            </div>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button onClick={() => setDeleteConfirmation(file.id)} className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-50 transition-colors">
+                <Trash2 className="h-4 w-4" />
+              </button>
+              <button onClick={() => setSelectedFile(file)} className="px-3 py-1 text-sm font-semibold text-white bg-emerald-500 rounded-md hover:bg-emerald-600 transition-colors">
+                View
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      {filteredFiles.length === 0 && <p className="text-center text-gray-500 mt-8">No files found. Try uploading some!</p>}
+    </div>
+  );
+
+  const DataViewerComponent = () => (
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 z-[60] flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-7xl h-[90vh] flex flex-col">
+        <header className="p-4 border-b flex justify-between items-center">
+          <h3 className="text-xl font-bold text-gray-800 truncate">{selectedFile?.name}</h3>
+          <button onClick={() => setSelectedFile(null)} className="p-2 rounded-full hover:bg-gray-200">
+            <X className="h-6 w-6 text-gray-600" />
+          </button>
+        </header>
+        <div className="p-4 flex-shrink-0">
+          <input
+            type="text"
+            placeholder="Search all columns..."
+            value={dataSearch}
+            onChange={(e) => { setDataSearch(e.target.value); setCurrentPage(1); }}
+            className="w-full max-w-sm pl-4 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
+          />
+        </div>
+        <div className="flex-1 overflow-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50 sticky top-0">
+              <tr>
+                {selectedFile?.headers.map(header => (
+                  <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="flex items-center justify-between">
+                      <span className="flex-1 truncate">{header}</span>
+                      <button onClick={() => requestDataSort(header)} className="ml-2">
+                        {dataSortConfig?.key === header ? (dataSortConfig.direction === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />) : <ChevronDown className="h-4 w-4 text-gray-300" />}
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Filter..."
+                      value={columnFilters[header] || ''}
+                      onChange={(e) => {
+                        setColumnFilters(prev => ({ ...prev, [header]: e.target.value }));
+                        setCurrentPage(1);
+                      }}
+                      className="mt-1 w-full text-sm border-gray-300 rounded-md"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {paginatedData.map((row, rowIndex) => (
+                <tr key={rowIndex} className="hover:bg-gray-50">
+                  {selectedFile?.headers.map(header => (
+                    <td key={header} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 truncate max-w-xs">{String(row[header] ?? '')}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <footer className="p-4 border-t flex justify-between items-center">
+          <p className="text-sm text-gray-600">Showing {paginatedData.length} of {filteredData.length} results</p>
+          <div className="flex items-center space-x-2">
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 border rounded-md disabled:opacity-50">Prev</button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 border rounded-md disabled:opacity-50">Next</button>
+          </div>
+        </footer>
+      </div>
+    </div>
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <button onClick={() => setActiveTab('upload')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'upload' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
+            Upload Files
+          </button>
+          <button onClick={() => setActiveTab('library')} className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'library' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}>
+            File Library
+          </button>
+        </nav>
+      </div>
+
+      {activeTab === 'upload' && <UploadComponent />}
+      {activeTab === 'library' && <LibraryComponent />}
+      {selectedFile && <DataViewerComponent />}
+
       {/* Notifications */}
-      <div className="fixed top-4 right-4 z-50 space-y-2">
-        {notifications.map(notification => (
-          <div
-            key={notification.id}
-            className={`px-4 py-3 rounded-lg shadow-lg ${
-              notification.type === 'success' 
-                ? 'bg-emerald-500 text-white' 
-                : 'bg-red-500 text-white'
-            }`}
-          >
-            {notification.message}
+      <div className="fixed top-20 right-5 z-[70] space-y-3">
+        {notifications.map(n => (
+          <div key={n.id} className={`flex items-center p-4 rounded-lg shadow-lg text-white ${n.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`}>
+            {n.type === 'success' ? <CheckCircle className="h-6 w-6 mr-3" /> : <AlertTriangle className="h-6 w-6 mr-3" />}
+            {n.message}
           </div>
         ))}
       </div>
 
       {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Confirm Deletion</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this file? This action cannot be undone.
-            </p>
-            <div className="flex space-x-3">
-              <button
-                onClick={() => deleteFile(showDeleteConfirm)}
-                className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
-              >
+      {deleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 z-[70] flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <div className="flex items-start">
+              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Delete File</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">Are you sure you want to delete this file? This action cannot be undone.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              <button onClick={() => handleDeleteFile(deleteConfirmation)} className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">
                 Delete
               </button>
-              <button
-                onClick={() => setShowDeleteConfirm(null)}
-                className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition-colors"
-              >
+              <button onClick={() => setDeleteConfirmation(null)} className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm">
                 Cancel
               </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-        <div className="flex items-center space-x-4 mb-4">
-          <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-            <File className="w-6 h-6 text-emerald-600" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">File Manager</h1>
-            <p className="text-gray-600">Upload, manage and analyze your Excel & CSV files</p>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveTab('upload')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-              activeTab === 'upload'
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Upload className="w-4 h-4" />
-            <span>Upload Files</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('library')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-              activeTab === 'library'
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <File className="w-4 h-4" />
-            <span>File Library</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('viewer')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-              activeTab === 'viewer'
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Eye className="w-4 h-4" />
-            <span>Data Viewer</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Upload Tab */}
-      {activeTab === 'upload' && (
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            className="border-2 border-dashed border-emerald-300 rounded-lg p-8 text-center hover:border-emerald-400 transition-colors cursor-pointer"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Upload className="w-8 h-8 text-emerald-600" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Drop files here or click to browse
-            </h3>
-            <p className="text-gray-600 mb-4">Support for Excel (.xlsx, .xls) and CSV files</p>
-            {isUploading && (
-              <div className="flex items-center justify-center space-x-2 text-emerald-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
-                <span>Processing files...</span>
-              </div>
-            )}
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept=".xlsx,.xls,.csv"
-            onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
-            className="hidden"
-          />
-        </div>
-      )}
-
-      {/* File Library Tab */}
-      {activeTab === 'library' && (
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-          <div className="mb-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search files..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                />
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'name' | 'date' | 'size')}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="date">Sort by Date</option>
-                <option value="size">Sort by Size</option>
-              </select>
-              <button
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <ArrowUpDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {filteredFiles.length === 0 ? (
-            <div className="text-center py-12">
-              <File className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No files uploaded</h3>
-              <p className="text-gray-600">Upload some Excel or CSV files to get started</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredFiles.map((file) => (
-                <div key={file.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      file.type === 'excel' ? 'bg-emerald-100' : 'bg-blue-100'
-                    }`}>
-                      {file.type === 'excel' ? (
-                        <FileText className={`w-5 h-5 ${file.type === 'excel' ? 'text-emerald-600' : 'text-blue-600'}`} />
-                      ) : (
-                        <File className="w-5 h-5 text-blue-600" />
-                      )}
-                    </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      file.type === 'excel' 
-                        ? 'bg-emerald-100 text-emerald-800' 
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {file.type.toUpperCase()}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-medium text-gray-900 mb-1 truncate" title={file.name}>
-                    {file.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-1">{formatFileSize(file.size)}</p>
-                  <p className="text-sm text-gray-600 mb-1">{file.data.length} rows</p>
-                  <p className="text-xs text-gray-500 mb-3">
-                    {file.uploadDate.toLocaleDateString()}
-                  </p>
-                  
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => {
-                        setSelectedFile(file);
-                        setActiveTab('viewer');
-                      }}
-                      className="flex-1 bg-emerald-500 text-white py-1.5 px-3 rounded text-sm hover:bg-emerald-600 transition-colors"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => setShowDeleteConfirm(file.id)}
-                      className="bg-red-500 text-white py-1.5 px-3 rounded text-sm hover:bg-red-600 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Data Viewer Tab */}
-      {activeTab === 'viewer' && (
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-          {!selectedFile ? (
-            <div className="text-center py-12">
-              <Eye className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No file selected</h3>
-              <p className="text-gray-600">Select a file from the library to view its data</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {selectedFile.name}
-                </h3>
-                <span className="text-sm text-gray-600">
-                  {filteredData.length} of {selectedFile.data.length} rows
-                </span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                      type="text"
-                      placeholder="Search all data..."
-                      value={globalSearch}
-                      onChange={(e) => setGlobalSearch(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      {selectedFile.headers.map((header, index) => (
-                        <th key={index} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          <div className="space-y-2">
-                            <span>{header}</span>
-                            <input
-                              type="text"
-                              placeholder="Filter..."
-                              value={columnFilters[index] || ''}
-                              onChange={(e) => setColumnFilters(prev => ({
-                                ...prev,
-                                [index]: e.target.value
-                              }))}
-                              className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-                            />
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {paginatedData.map((row, rowIndex) => (
-                      <tr key={rowIndex} className="hover:bg-gray-50">
-                        {row.map((cell, cellIndex) => (
-                          <td key={cellIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {cell || '-'}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">
-                    Showing {((currentPage - 1) * rowsPerPage) + 1} to{' '}
-                    {Math.min(currentPage * rowsPerPage, filteredData.length)} of{' '}
-                    {filteredData.length} rows
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                      className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                    >
-                      Previous
-                    </button>
-                    <span className="px-3 py-1 text-sm">
-                      {currentPage} of {totalPages}
-                    </span>
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       )}
     </div>
