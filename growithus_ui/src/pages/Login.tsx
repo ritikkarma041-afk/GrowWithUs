@@ -170,6 +170,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="space-y-2">
+            <Link to="/dashboard">
               <button
                 type="submit"
                 disabled={loading}
@@ -177,6 +178,7 @@ const Login: React.FC = () => {
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
+              </Link>
 
               <Link to="/admin">
                 <button
