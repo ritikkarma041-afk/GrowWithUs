@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, TrendingUp, Leaf, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react';
-import apiClient from '../api/axios';
+import apiClient from '@/api/axios';
+import authBg from '@/assets/svg/auth-background.svg';
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +53,7 @@ const Login: React.FC = () => {
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.1'%3E%3Cpath d='M30 0l15 30-15 30L15 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url(${authBg})`,
         }} />
       </div>
 
