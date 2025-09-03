@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Save } from 'lucide-react';
 
 const Toggle: React.FC<{ label: string; enabled: boolean; onToggle: () => void }> = ({ label, enabled, onToggle }) => (
-  <button type="button" onClick={onToggle} className={`${enabled ? 'bg-emerald-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors`}>
+  <button type="button" onClick={onToggle} className={`${enabled ? 'bg-emerald-500' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors`}>
     <span className={`${enabled ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform`} />
   </button>
 );
@@ -56,15 +56,15 @@ const SecuritySettings: React.FC = () => {
               <input type="number" id="passwordMinLength" name="passwordMinLength" value={settings.passwordMinLength} onChange={handleInputChange} className="w-full md:w-1/3 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" />
             </div>
             <div className="flex items-center space-x-4">
-              <input type="checkbox" id="passwordRequireUppercase" name="passwordRequireUppercase" checked={settings.passwordRequireUppercase} onChange={handleInputChange} className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+              <input type="checkbox" id="passwordRequireUppercase" name="passwordRequireUppercase" checked={settings.passwordRequireUppercase} onChange={handleInputChange} className="h-4 w-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500" />
               <label htmlFor="passwordRequireUppercase" className="text-sm text-gray-700">Require at least one uppercase letter</label>
             </div>
             <div className="flex items-center space-x-4">
-              <input type="checkbox" id="passwordRequireNumber" name="passwordRequireNumber" checked={settings.passwordRequireNumber} onChange={handleInputChange} className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+              <input type="checkbox" id="passwordRequireNumber" name="passwordRequireNumber" checked={settings.passwordRequireNumber} onChange={handleInputChange} className="h-4 w-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500" />
               <label htmlFor="passwordRequireNumber" className="text-sm text-gray-700">Require at least one number</label>
             </div>
             <div className="flex items-center space-x-4">
-              <input type="checkbox" id="passwordRequireSymbol" name="passwordRequireSymbol" checked={settings.passwordRequireSymbol} onChange={handleInputChange} className="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" />
+              <input type="checkbox" id="passwordRequireSymbol" name="passwordRequireSymbol" checked={settings.passwordRequireSymbol} onChange={handleInputChange} className="h-4 w-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500" />
               <label htmlFor="passwordRequireSymbol" className="text-sm text-gray-700">Require at least one special character</label>
             </div>
           </div>
@@ -86,7 +86,7 @@ const SecuritySettings: React.FC = () => {
         </div>
 
         <div className="flex justify-end pt-4">
-          <button type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center space-x-2">
+          <button type="submit" className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 flex items-center space-x-2">
             <Save className="w-4 h-4" />
             <span>Save Changes</span>
           </button>

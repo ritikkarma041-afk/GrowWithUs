@@ -78,7 +78,7 @@ const Transactions: React.FC = () => {
             </select>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 flex items-center space-x-2">
+            <button className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center space-x-2">
               <Download className="w-4 h-4" />
               <span>Export</span>
             </button>

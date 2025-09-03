@@ -67,7 +67,7 @@ const Signup: React.FC = () => {
           <div className="flex justify-center items-center mb-4">
             <Link to="/" className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <Leaf className="w-8 h-8 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
@@ -131,11 +131,11 @@ const Signup: React.FC = () => {
 
             <div className="flex items-start">
               <div className="flex items-center h-5">
-                <input id="terms" name="terms" type="checkbox" className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded" checked={formData.agreedToTerms} onChange={(e) => setFormData({...formData, agreedToTerms: e.target.checked})} />
+                <input id="terms" name="terms" type="checkbox" className="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-gray-300 rounded" checked={formData.agreedToTerms} onChange={(e) => setFormData({...formData, agreedToTerms: e.target.checked})} />
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="terms" className="font-medium text-gray-700">
-                  I agree to the <Link to="/terms-of-service" className="text-emerald-600 hover:text-emerald-700">Terms of Service</Link>
+                  I agree to the <Link to="/terms-of-service" className="text-emerald-500 hover:text-emerald-600">Terms of Service</Link>
                 </label>
               </div>
             </div>
@@ -144,7 +144,7 @@ const Signup: React.FC = () => {
               <button
                 type="submit"
                 disabled={!isFormValid || loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-700 hover:via-teal-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
               >
                 {loading ? 'Signing Up...' : 'Sign Up'}
               </button>
@@ -154,7 +154,7 @@ const Signup: React.FC = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
+              <Link to="/login" className="font-medium text-emerald-500 hover:text-emerald-600 transition-colors">
                 Sign in
               </Link>
             </p>

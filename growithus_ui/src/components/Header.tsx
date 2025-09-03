@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
 
           <div className="flex items-center space-x-2">
-             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                 JD
               </div>
             <div className="hidden sm:block">

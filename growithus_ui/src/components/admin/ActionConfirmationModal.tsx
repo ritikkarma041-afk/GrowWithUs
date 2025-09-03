@@ -32,7 +32,7 @@ const ActionConfirmationModal: React.FC<ActionConfirmationModalProps> = ({
           </button>
           <button
             onClick={onConfirm}
-            className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+            className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
           >
             Confirm
           </button>

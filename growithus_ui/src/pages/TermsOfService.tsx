@@ -10,7 +10,7 @@ const TermsOfService: React.FC = () => {
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-lg flex items-center justify-center shadow-md">
                   <Leaf className="w-6 h-6 text-white" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-md">
@@ -18,7 +18,7 @@ const TermsOfService: React.FC = () => {
                 </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent">
                   GrowWithUs
                 </h1>
                 <p className="text-xs text-gray-500 font-medium">COMPANY</p>
@@ -26,7 +26,7 @@ const TermsOfService: React.FC = () => {
             </Link>
             <Link
               to="/signup"
-              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 flex items-center space-x-2 text-sm"
+              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center space-x-2 text-sm"
             >
               Sign Up
             </Link>
@@ -75,7 +75,7 @@ const TermsOfService: React.FC = () => {
 
             <h2 className="text-2xl font-semibold mt-8 mb-4">7. Contact Us</h2>
             <p>
-              If you have any questions about these Terms, please contact us at <a href="mailto:support@growwithus.com" className="text-emerald-600 hover:underline">support@growwithus.com</a>.
+              If you have any questions about these Terms, please contact us at <a href="mailto:support@growwithus.com" className="text-emerald-500 hover:underline">support@growwithus.com</a>.
             </p>
           </div>
         </div>

@@ -90,7 +90,7 @@ const Settings: React.FC = () => {
           <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/50 p-4">
             <nav className="space-y-2">
               {tabs.map((tab) => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === tab.id ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'}`}>
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${activeTab === tab.id ? 'bg-emerald-100 text-emerald-600 border border-emerald-200' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'}`}>
                   <tab.icon className="w-5 h-5 mr-3" /> {tab.label}
                 </button>
               ))}
@@ -109,7 +109,7 @@ const Settings: React.FC = () => {
                 <div className="flex items-center space-x-6">
                   <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-2xl font-semibold">JD</div>
                   <div className="space-y-2">
-                    <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">Change Photo</button>
+                    <button className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors">Change Photo</button>
                     <p className="text-sm text-gray-500">JPG, GIF or PNG. 1MB max.</p>
                   </div>
                 </div>
@@ -138,7 +138,7 @@ const Settings: React.FC = () => {
                 <hr className="border-gray-200" />
                 <div>
                   <div className="flex items-center">
-                    <Home className="w-5 h-5 mr-3 text-emerald-600" />
+                    <Home className="w-5 h-5 mr-3 text-emerald-500" />
                     <h3 className="text-lg font-semibold text-gray-900">Address Information</h3>
                   </div>
                   <p className="text-sm text-gray-500 mt-1 pl-8">Your primary residential address for communication.</p>
@@ -167,7 +167,7 @@ const Settings: React.FC = () => {
                 </div>
                 <div className="flex justify-end space-x-4 pt-4">
                   <button className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
-                  <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save Changes</button>
+                  <button className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Save Changes</button>
                 </div>
               </div>
             )}
@@ -194,7 +194,7 @@ const Settings: React.FC = () => {
                 {/* Identity Verification Card */}
                 <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
                   <div className="flex items-center mb-4">
-                    <UserCheck className="w-6 h-6 mr-3 text-emerald-600" />
+                    <UserCheck className="w-6 h-6 mr-3 text-emerald-500" />
                     <h2 className="text-xl font-semibold text-gray-900">Identity Verification (KYC)</h2>
                     <StatusBadge status={kycStatus} />
                   </div>
@@ -220,7 +220,7 @@ const Settings: React.FC = () => {
                   )}
 
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!kycFile || kycStatus !== 'Pending'}>
+                    <button className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!kycFile || kycStatus !== 'Pending'}>
                       {kycStatus === 'Pending' ? 'Submit for Verification' : 'Upload & Save'}
                     </button>
                   </div>
@@ -230,11 +230,11 @@ const Settings: React.FC = () => {
                 <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center">
-                        <User className="w-6 h-6 mr-3 text-emerald-600" />
+                        <User className="w-6 h-6 mr-3 text-emerald-500" />
                         <h2 className="text-xl font-semibold text-gray-900">Nominee Information</h2>
                       </div>
                       {nominees.length < 2 && (
-                        <button onClick={addNominee} className="flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-800">
+                        <button onClick={addNominee} className="flex items-center text-sm font-medium text-emerald-500 hover:text-emerald-700">
                             <PlusCircle className="w-4 h-4 mr-1" />
                             Add Nominee
                         </button>
@@ -274,14 +274,14 @@ const Settings: React.FC = () => {
                   </div>
 
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save Nominees</button>
+                    <button className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Save Nominees</button>
                   </div>
                 </div>
 
                 {/* Bank Account Card */}
                 <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
                   <div className="flex items-center mb-4">
-                    <Landmark className="w-6 h-6 mr-3 text-emerald-600" />
+                    <Landmark className="w-6 h-6 mr-3 text-emerald-500" />
                     <h2 className="text-xl font-semibold text-gray-900">Bank Account Details</h2>
                     <StatusBadge status={bankDetails.status} />
                   </div>
@@ -302,7 +302,7 @@ const Settings: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save Bank Details</button>
+                    <button className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Save Bank Details</button>
                   </div>
                 </div>
               </div>

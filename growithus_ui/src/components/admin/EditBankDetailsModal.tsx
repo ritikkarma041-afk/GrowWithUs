@@ -40,7 +40,7 @@ const EditBankDetailsModal: React.FC<EditBankDetailsModalProps> = ({ isOpen, onC
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col items-center mb-4">
-          <Landmark className="w-8 h-8 mb-3 text-emerald-600" />
+          <Landmark className="w-8 h-8 mb-3 text-emerald-500" />
           <h2 className="text-2xl font-bold text-gray-800">Edit Bank Details</h2>
         </div>
         
@@ -59,7 +59,7 @@ const EditBankDetailsModal: React.FC<EditBankDetailsModalProps> = ({ isOpen, onC
 
         <div className="flex justify-end space-x-4 pt-4">
           <button type="button" onClick={onClose} className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
-          <button type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save Changes</button>
+          <button type="submit" className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Save Changes</button>
         </div>
       </form>
     </Modal>

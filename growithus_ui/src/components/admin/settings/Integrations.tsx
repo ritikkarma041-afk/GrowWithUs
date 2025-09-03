@@ -48,7 +48,7 @@ const Integrations: React.FC = () => {
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 integration.connected 
                   ? 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50' 
-                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                  : 'bg-emerald-500 text-white hover:bg-emerald-600'
               }`}
             >
               {integration.connected ? 'Manage' : 'Connect'}

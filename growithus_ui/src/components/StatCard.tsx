@@ -37,7 +37,7 @@ const StatCard: React.FC<StatCardProps> = ({
           )}
         </div>
         <div className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg">
-          <Icon className="w-6 h-6 text-emerald-600" />
+          <Icon className="w-6 h-6 text-emerald-500" />
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ const notificationEvents = [
 ];
 
 const Toggle: React.FC<{ enabled: boolean; onToggle: () => void }> = ({ enabled, onToggle }) => (
-  <button type="button" onClick={onToggle} className={`${enabled ? 'bg-emerald-600' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors`}>
+  <button type="button" onClick={onToggle} className={`${enabled ? 'bg-emerald-500' : 'bg-gray-200'} relative inline-flex items-center h-6 rounded-full w-11 transition-colors`}>
     <span className={`${enabled ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform`} />
   </button>
 );
@@ -71,7 +71,7 @@ const NotificationSettings: React.FC = () => {
         </div>
         
         <div className="flex justify-end pt-8">
-          <button type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center space-x-2">
+          <button type="submit" className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 flex items-center space-x-2">
             <Save className="w-4 h-4" />
             <span>Save Changes</span>
           </button>

@@ -33,7 +33,7 @@ const AdminEmail: React.FC = () => {
               <CheckCircle className="w-12 h-12 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800">Email Sent!</h3>
-            <p className="text-gray-600 mt-2">Your message to <span className="font-medium text-emerald-700">{recipient}</span> has been sent.</p>
+            <p className="text-gray-600 mt-2">Your message to <span className="font-medium text-emerald-600">{recipient}</span> has been sent.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -76,7 +76,7 @@ const AdminEmail: React.FC = () => {
             <div className="flex justify-end">
               <button 
                 type="submit" 
-                className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 flex items-center space-x-2"
+                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center space-x-2"
               >
                 <Send className="w-5 h-5" />
                 <span>Send Email</span>

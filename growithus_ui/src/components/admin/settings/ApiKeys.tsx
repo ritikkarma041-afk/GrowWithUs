@@ -79,7 +79,7 @@ const ApiKeys: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-1">API Keys</h2>
           <p className="text-sm text-gray-500">Manage API keys for programmatic access to your platform.</p>
         </div>
-        <button onClick={() => setIsCreateModalOpen(true)} className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center space-x-2">
+        <button onClick={() => setIsCreateModalOpen(true)} className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 flex items-center space-x-2">
           <PlusCircle className="w-4 h-4" />
           <span>Generate Key</span>
         </button>
@@ -127,10 +127,10 @@ const ApiKeys: React.FC = () => {
             <div className="relative bg-gray-100 p-4 rounded-lg font-mono text-sm">
               {generatedKey}
               <button onClick={copyToClipboard} className="absolute top-2 right-2 p-2 rounded-md hover:bg-gray-200">
-                {copied ? <Check className="w-5 h-5 text-emerald-600" /> : <Copy className="w-5 h-5 text-gray-500" />}
+                {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5 text-gray-500" />}
               </button>
             </div>
-            <button onClick={closeCreateModal} className="mt-6 w-full px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Done</button>
+            <button onClick={closeCreateModal} className="mt-6 w-full px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Done</button>
           </div>
         ) : (
           <form onSubmit={handleGenerateKey} className="space-y-6">
@@ -148,7 +148,7 @@ const ApiKeys: React.FC = () => {
             </div>
             <div className="flex justify-end space-x-4 pt-4">
               <button type="button" onClick={closeCreateModal} className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
-              <button type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Generate Key</button>
+              <button type="submit" className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Generate Key</button>
             </div>
           </form>
         )}

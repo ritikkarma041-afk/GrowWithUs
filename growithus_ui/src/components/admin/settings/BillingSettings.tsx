@@ -21,12 +21,12 @@ const BillingSettings: React.FC = () => {
           <div className="p-6 border border-gray-200 rounded-lg bg-white h-full flex flex-col">
             <h3 className="text-lg font-medium text-gray-800 mb-4">Current Plan</h3>
             <div className="flex-grow">
-              <p className="text-3xl font-bold text-emerald-600">Enterprise</p>
+              <p className="text-3xl font-bold text-emerald-500">Enterprise</p>
               <p className="text-gray-600 mt-2">₹15,000 / month</p>
               <p className="text-sm text-gray-500 mt-4">Your plan includes unlimited users, advanced analytics, and priority support.</p>
             </div>
             <div className="mt-6 space-y-2">
-              <button className="w-full px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Change Plan</button>
+              <button className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Change Plan</button>
               <button className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Update Payment Method</button>
             </div>
           </div>
@@ -87,7 +87,7 @@ const BillingSettings: React.FC = () => {
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${invoice.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>{invoice.status}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-emerald-600 hover:text-emerald-800 flex items-center space-x-1">
+                    <button className="text-emerald-500 hover:text-emerald-700 flex items-center space-x-1">
                       <Download className="w-4 h-4" />
                       <span>Download</span>
                     </button>

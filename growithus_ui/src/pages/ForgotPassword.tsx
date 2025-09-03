@@ -30,7 +30,7 @@ const ForgotPassword = () => {
           <Link to="/" className="inline-block mb-6">
             <div className="flex justify-center items-center">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <Leaf className="w-8 h-8 text-white" />
                 </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
               </div>
               <h2 className="text-2xl font-bold text-gray-800">Reset Link Sent!</h2>
               <p className="text-gray-600 mt-2">
-                If an account exists for <span className="font-semibold text-emerald-700">{email}</span>, you will receive an email with instructions on how to reset your password.
+                If an account exists for <span className="font-semibold text-emerald-600">{email}</span>, you will receive an email with instructions on how to reset your password.
               </p>
             </div>
           ) : (
@@ -78,7 +78,7 @@ const ForgotPassword = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-700 hover:via-teal-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105"
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105"
                 >
                   Send Reset Link
                 </button>
@@ -87,7 +87,7 @@ const ForgotPassword = () => {
           )}
 
           <div className="mt-6 text-center">
-            <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-700 transition-colors flex items-center justify-center">
+            <Link to="/login" className="font-medium text-emerald-500 hover:text-emerald-600 transition-colors flex items-center justify-center">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Sign In
             </Link>

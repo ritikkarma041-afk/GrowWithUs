@@ -6,11 +6,12 @@ import UserLayout from './layouts/UserLayout';
 import AdminLayout from './layouts/AdminLayout';
 
 // Standalone Pages
+import LandingPage from './pages/LandingPage'; // New
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import TermsOfService from './pages/TermsOfService';
-import ForgotPassword from './pages/ForgotPassword'; // New
-import ResetPassword from './pages/ResetPassword'; // New
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // User Pages
 import UserDashboard from './pages/UserDashboard';
@@ -26,7 +27,7 @@ import AdminInvestments from './pages/admin/Investments';
 import AdminReports from './pages/admin/Reports';
 import AdminEmail from './pages/admin/Email';
 import AdminSettings from './pages/admin/Settings';
-import AddUser from './pages/admin/AddUser'; // New
+import AddUser from './pages/admin/AddUser';
 
 function App() {
   return (
@@ -34,12 +35,12 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Routes>
           {/* Standalone Routes */}
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<LandingPage />} /> {/* Changed */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} /> {/* New */}
-          <Route path="/reset-password" element={<ResetPassword />} /> {/* New */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* User Routes with Layout */}
           <Route element={<UserLayout />}>
@@ -53,7 +54,7 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/users/add" element={<AddUser />} /> {/* New */}
+            <Route path="/admin/users/add" element={<AddUser />} />
             <Route path="/admin/users/:id" element={<UserDetail />} />
             <Route path="/admin/investments" element={<AdminInvestments />} />
             <Route path="/admin/reports" element={<AdminReports />} />

@@ -57,7 +57,7 @@ const NotificationDropdown: React.FC = () => {
         ))}
       </div>
       <div className="p-2 bg-gray-50 text-center">
-        <button className="text-sm font-medium text-emerald-600 hover:text-emerald-800 transition-colors">
+        <button className="text-sm font-medium text-emerald-500 hover:text-emerald-700 transition-colors">
           View All Notifications
         </button>
       </div>

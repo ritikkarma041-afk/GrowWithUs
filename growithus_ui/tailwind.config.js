@@ -8,10 +8,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+      },
+      boxShadow: {
+        'inner-soft': 'inset 0 2px 8px 0 rgb(0 0 0 / 0.05)',
+      },
       keyframes: {
         'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         'slide-up': {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
@@ -29,7 +35,7 @@ module.exports = {
         },
       },
       animation: {
-        'fade-in': 'fade-in 0.3s ease-out forwards',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
         'slide-up': 'slide-up 0.4s ease-out forwards',
         'pulse-glow': 'pulse-glow 2s infinite',
       }

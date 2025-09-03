@@ -28,7 +28,7 @@ const Portfolio: React.FC = () => {
   const allocationOption = {
     title: { text: 'Asset Allocation', left: 'center', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
     tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: ₹{c} ({d}%)' },
-    series: [{ name: 'Portfolio', type: 'pie', radius: '50%', data: holdings.slice(0, 6).map(holding => ({ value: holding.marketValue, name: holding.symbol, itemStyle: { color: faker.helpers.arrayElement(['#059669', '#10b981', '#0891b2', '#0e7490', '#06b6d4', '#22d3ee']) } })), emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } } }]
+    series: [{ name: 'Portfolio', type: 'pie', radius: '50%', data: holdings.slice(0, 6).map(holding => ({ value: holding.marketValue, name: holding.symbol, itemStyle: { color: faker.helpers.arrayElement(['#10b981', '#34d399', '#06b6d4', '#0891b2', '#22d3ee', '#67e8f9']) } })), emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } } }]
   };
 
   const performanceData = Array.from({ length: 30 }, (_, i) => {
@@ -42,7 +42,7 @@ const Portfolio: React.FC = () => {
     tooltip: { trigger: 'axis', formatter: function(params: any) { return `Day ${params[0].dataIndex + 1}: ₹${params[0].value.toLocaleString('en-IN')}`; } },
     xAxis: { type: 'category', data: Array.from({ length: 30 }, (_, i) => `D${i + 1}`) },
     yAxis: { type: 'value', axisLabel: { formatter: '₹{value}' } },
-    series: [{ data: performanceData, type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#059669', width: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(5, 150, 105, 0.2)' }, { offset: 1, color: 'rgba(5, 150, 105, 0.05)' }] } } }],
+    series: [{ data: performanceData, type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#10b981', width: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(16, 185, 129, 0.2)' }, { offset: 1, color: 'rgba(16, 185, 129, 0.05)' }] } } }],
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
   };
 
@@ -79,7 +79,7 @@ const Portfolio: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input type="text" placeholder="Search holdings..." className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 flex items-center space-x-2">
+            <button className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center space-x-2">
               <Filter className="w-4 h-4" />
               <span className="hidden sm:inline">Filter</span>
             </button>

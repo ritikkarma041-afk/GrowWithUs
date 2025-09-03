@@ -66,7 +66,7 @@ const Login: React.FC = () => {
         <div className="text-center">
           <div className="flex justify-center items-center mb-6">
             <div className="relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <Leaf className="w-8 h-8 text-white" />
               </div>
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
               </div>
             </div>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent mb-2">
             GrowWithUs
           </h1>
           <p className="text-sm font-medium text-gray-500 mb-4">COMPANY</p>
@@ -164,7 +164,7 @@ const Login: React.FC = () => {
                 </label>
               </div>
 
-              <Link to="/forgot-password" className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium">
+              <Link to="/forgot-password" className="text-sm text-emerald-500 hover:text-emerald-600 transition-colors font-medium">
                 Forgot password?
               </Link>
             </div>
@@ -174,7 +174,7 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-700 hover:via-teal-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Signing in...' : 'Sign In'}
               </button>
@@ -183,7 +183,7 @@ const Login: React.FC = () => {
               <Link to="/admin">
                 <button
                   type="button"
-                  className="w-full flex justify-center py-3 px-4 border border-emerald-200 rounded-lg shadow-sm text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all backdrop-blur-sm"
+                  className="w-full flex justify-center py-3 px-4 border border-emerald-200 rounded-lg shadow-sm text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all backdrop-blur-sm"
                 >
                   Admin Login
                 </button>
@@ -194,7 +194,7 @@ const Login: React.FC = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link to="/signup" className="font-medium text-emerald-600 hover:text-emerald-700 transition-colors">
+              <Link to="/signup" className="font-medium text-emerald-500 hover:text-emerald-600 transition-colors">
                 Sign up
               </Link>
             </p>

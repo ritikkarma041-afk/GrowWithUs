@@ -87,7 +87,7 @@ const UserDashboard: React.FC = () => {
 
   const chartOption = {
     title: { text: 'Portfolio Performance', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
-    tooltip: { trigger: 'axis', axisPointer: { type: 'cross', label: { backgroundColor: '#059669' } } },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'cross', label: { backgroundColor: '#10b981' } } },
     xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
     yAxis: { type: 'value', axisLabel: { formatter: '₹{value}L' } },
     series: [{
@@ -96,9 +96,9 @@ const UserDashboard: React.FC = () => {
       smooth: true,
       symbol: 'circle',
       symbolSize: 6,
-      lineStyle: { color: '#059669', width: 3 },
-      itemStyle: { color: '#059669' },
-      areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(5, 150, 105, 0.3)' }, { offset: 1, color: 'rgba(5, 150, 105, 0.1)' }] } }
+      lineStyle: { color: '#10b981', width: 3 },
+      itemStyle: { color: '#10b981' },
+      areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(16, 185, 129, 0.3)' }, { offset: 1, color: 'rgba(16, 185, 129, 0.1)' }] } }
     }],
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
   };
@@ -120,14 +120,14 @@ const UserDashboard: React.FC = () => {
         <div className="flex space-x-2 sm:space-x-4 mt-4 sm:mt-0 w-full sm:w-auto">
           <button
             onClick={() => setIsInvestModalOpen(true)}
-            className="w-1/2 sm:w-auto px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md text-sm"
+            className="w-1/2 sm:w-auto px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md text-sm"
           >
             <ArrowDownToLine className="w-4 h-4" />
             <span>Invest</span>
           </button>
           <button
             onClick={() => setIsWithdrawModalOpen(true)}
-            className="w-1/2 sm:w-auto px-4 py-2 bg-white border border-emerald-200 text-emerald-700 rounded-lg hover:bg-emerald-50 transition-colors flex items-center justify-center space-x-2 shadow-md text-sm"
+            className="w-1/2 sm:w-auto px-4 py-2 bg-white border border-emerald-200 text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors flex items-center justify-center space-x-2 shadow-md text-sm"
           >
             <ArrowUpFromLine className="w-4 h-4" />
             <span>Withdraw</span>
@@ -184,7 +184,7 @@ const UserDashboard: React.FC = () => {
             <h3 className="text-2xl font-bold text-gray-800">Success!</h3>
             <p className="text-gray-600 mt-2 text-lg">{transactionSuccess}</p>
             <div className="mt-8 w-full space-y-3">
-              <button onClick={() => { setTransactionSuccess(null); setInvestmentAmount(''); }} className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-teal-700">Make Another Deposit</button>
+              <button onClick={() => { setTransactionSuccess(null); setInvestmentAmount(''); }} className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-600">Make Another Deposit</button>
               <button onClick={resetAndCloseInvestModal} className="w-full py-3 px-4 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200">Done</button>
             </div>
           </div>
@@ -198,7 +198,7 @@ const UserDashboard: React.FC = () => {
                 <input id="investment-amount" type="number" value={investmentAmount} onChange={(e) => setInvestmentAmount(e.target.value)} required min="1" className="w-full pl-10 pr-4 py-4 text-xl border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" placeholder="0.00" />
               </div>
             </div>
-            <button type="submit" className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">Confirm Investment</button>
+            <button type="submit" className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">Confirm Investment</button>
           </form>
         )}
       </Modal>
@@ -212,7 +212,7 @@ const UserDashboard: React.FC = () => {
             <h3 className="text-2xl font-bold text-gray-800">Withdrawal Initiated</h3>
             <p className="text-gray-600 mt-2 text-lg">{transactionSuccess}</p>
             <div className="mt-8 w-full space-y-3">
-              <button onClick={() => { setTransactionSuccess(null); setWithdrawalAmount(''); }} className="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-teal-700">Make Another Withdrawal</button>
+              <button onClick={() => { setTransactionSuccess(null); setWithdrawalAmount(''); }} className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-semibold hover:from-emerald-600 hover:to-teal-600">Make Another Withdrawal</button>
               <button onClick={resetAndCloseWithdrawModal} className="w-full py-3 px-4 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200">Done</button>
             </div>
           </div>
@@ -227,7 +227,7 @@ const UserDashboard: React.FC = () => {
               </div>
               <p className="text-xs text-gray-500 mt-2">Maximum withdrawable amount: ₹{currentValue.toLocaleString('en-IN')}</p>
             </div>
-            <button type="submit" className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">Confirm Withdrawal</button>
+            <button type="submit" className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">Confirm Withdrawal</button>
           </form>
         )}
       </Modal>

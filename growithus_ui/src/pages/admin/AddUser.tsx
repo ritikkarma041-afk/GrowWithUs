@@ -40,7 +40,7 @@ const Section: React.FC<{ title: string; icon: React.ElementType; children: Reac
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center">
-          <Icon className="w-6 h-6 mr-3 text-emerald-600" />
+          <Icon className="w-6 h-6 mr-3 text-emerald-500" />
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         </div>
         {isOpen ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
@@ -208,7 +208,7 @@ const AddUser: React.FC = () => {
               </div>
             ))}
             {userData.nominees.length < 2 && (
-              <button type="button" onClick={addNominee} className="flex items-center text-sm font-medium text-emerald-600 hover:text-emerald-800">
+              <button type="button" onClick={addNominee} className="flex items-center text-sm font-medium text-emerald-500 hover:text-emerald-700">
                 <PlusCircle className="w-4 h-4 mr-1" />
                 Add Nominee
               </button>
@@ -220,7 +220,7 @@ const AddUser: React.FC = () => {
           <Link to="/admin/users">
             <button type="button" className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-semibold">Cancel</button>
           </Link>
-          <button type="submit" className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 font-semibold flex items-center space-x-2">
+          <button type="submit" className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 font-semibold flex items-center space-x-2">
             <Save className="w-5 h-5" />
             <span>Create User</span>
           </button>

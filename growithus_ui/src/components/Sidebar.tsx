@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-lg flex items-center justify-center shadow-lg">
               <Leaf className="w-6 h-6 text-white" />
             </div>
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
             </div>
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent">
               GrowWithUs
             </h1>
             <p className="text-xs text-gray-500 font-medium">COMPANY</p>
@@ -75,8 +75,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
               onClick={() => setIsOpen(false)}
               className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-emerald-50 text-emerald-700 border-r-4 border-emerald-600'
-                  : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-4 border-emerald-500'
+                  : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
               }`}
             >
               <item.icon className="w-5 h-5 mr-3" />
