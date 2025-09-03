@@ -1,7 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, TrendingUp, BarChart, GitBranch, Zap, Phone, ArrowRight, Leaf, DollarSign, Globe, PieChart, Users as UsersIcon } from 'lucide-react';
-import LandingHeader from '../components/LandingHeader';
+import LandingHeader from '@/components/LandingHeader';
+
+import heroBackground from '@/assets/images/hero-background.jpg';
+import teamCollaboration from '@/assets/images/team-collaboration.jpg';
+import techBackground from '@/assets/images/tech-background.jpg';
+import strategyEquity from '@/assets/images/strategy-equity.jpg';
+import strategyCommodity from '@/assets/images/strategy-commodity.jpg';
+import strategyForex from '@/assets/images/strategy-forex.jpg';
+import strategyCrypto from '@/assets/images/strategy-crypto.jpg';
 
 const FeatureCard: React.FC<{ icon: React.ElementType; title: string; children: React.ReactNode }> = ({ icon: Icon, title, children }) => (
   <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-white/50 shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-2 transition-all duration-300 group">
@@ -43,7 +51,7 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <main className="relative text-white">
         <div className="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop" alt="Financial Charts" className="w-full h-full object-cover" />
+            <img src={heroBackground} alt="Financial Charts" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent"></div>
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-32 text-center">
@@ -85,7 +93,7 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="rounded-2xl overflow-hidden shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?q=80&w=2047&auto=format&fit=crop" alt="Collaborative Team" className="w-full h-full object-cover" />
+                    <img src={teamCollaboration} alt="Collaborative Team" className="w-full h-full object-cover" />
                 </div>
                 <div>
                     <h2 className="text-4xl font-bold text-gray-900 mb-6">A New Category in Investment</h2>
@@ -119,7 +127,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Our Promise */}
-      <section id="promise" className="relative py-24 bg-slate-900 text-white bg-cover bg-center bg-fixed" style={{backgroundImage: `url(https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=2089&auto=format&fit=crop)`}}>
+      <section id="promise" className="relative py-24 bg-slate-900 text-white bg-cover bg-center bg-fixed" style={{backgroundImage: `url(${techBackground})`}}>
         <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">Our Unwavering Promise</h2>
@@ -139,10 +147,10 @@ const LandingPage: React.FC = () => {
             <p className="text-gray-600 mt-3 text-lg">We guarantee returns by strategically balancing investments across four global markets.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            <StrategyCard imageUrl="https://images.unsplash.com/photo-1624953587687-e259b7b68483?q=80&w=1974&auto=format&fit=crop" title="Equity">Shares of top-tier global companies, selected for stability and long-term growth potential.</StrategyCard>
-            <StrategyCard imageUrl="https://images.unsplash.com/photo-1605723517503-3cadb5818a0c?q=80&w=2070&auto=format&fit=crop" title="Commodity">Tangible assets like gold, silver, and crude oil to hedge against inflation and market volatility.</StrategyCard>
-            <StrategyCard imageUrl="https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=2070&auto=format&fit=crop" title="Forex">Strategic global currency trading to capitalize on macroeconomic trends and market movements.</StrategyCard>
-            <StrategyCard imageUrl="https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1932&auto=format&fit=crop" title="Crypto">Calculated, risk-managed investments in leading digital assets like Bitcoin and Ethereum.</StrategyCard>
+            <StrategyCard imageUrl={strategyEquity} title="Equity">Shares of top-tier global companies, selected for stability and long-term growth potential.</StrategyCard>
+            <StrategyCard imageUrl={strategyCommodity} title="Commodity">Tangible assets like gold, silver, and crude oil to hedge against inflation and market volatility.</StrategyCard>
+            <StrategyCard imageUrl={strategyForex} title="Forex">Strategic global currency trading to capitalize on macroeconomic trends and market movements.</StrategyCard>
+            <StrategyCard imageUrl={strategyCrypto} title="Crypto">Calculated, risk-managed investments in leading digital assets like Bitcoin and Ethereum.</StrategyCard>
           </div>
         </div>
       </section>

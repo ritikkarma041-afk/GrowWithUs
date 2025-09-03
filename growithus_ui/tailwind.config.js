@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
+      backgroundImage: {
+        'auth-pattern': "url('/src/assets/svg/background-pattern.svg')",
+      },
       boxShadow: {
         'inner-soft': 'inset 0 2px 8px 0 rgb(0 0 0 / 0.05)',
       },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UploadCloud, Save } from 'lucide-react';
+import placeholderLogo from '@/assets/images/placeholder-logo.png';
 
 const CompanyProfile: React.FC = () => {
   const [profile, setProfile] = useState({
@@ -9,7 +10,7 @@ const CompanyProfile: React.FC = () => {
     address: '123 Financial Street, Dalal Avenue, Mumbai, Maharashtra, 400001',
   });
   const [logo, setLogo] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>('https://via.placeholder.com/128');
+  const [logoPreview, setLogoPreview] = useState<string | null>(placeholderLogo);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
