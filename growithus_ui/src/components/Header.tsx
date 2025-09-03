@@ -1,55 +1,59 @@
-import React, { useState, useRef } from 'react';
-import { Menu, Bell, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bell, Menu } from 'lucide-react';
 import NotificationDropdown from './NotificationDropdown';
 import { useClickOutside } from '../hooks/useClickOutside';
 
 interface HeaderProps {
-  onMenuClick: () => void;
+  onMenuToggle: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const notificationsRef = useRef<HTMLDivElement>(null);
+const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-  useClickOutside(notificationsRef, () => setIsNotificationsOpen(false));
+  const notificationRef = useClickOutside(() => {
+    setIsNotificationOpen(false);
+  });
 
   return (
-    <header className="flex-shrink-0 bg-white/80 backdrop-blur-lg border-b border-gray-200">
-      <div className="flex items-center justify-between p-4">
-        <div className="flex items-center">
+    <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
           <button
-            onClick={onMenuClick}
-            className="text-gray-500 focus:outline-none lg:hidden"
-            aria-label="Open sidebar"
+            onClick={onMenuToggle}
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="w-5 h-5 text-gray-600" />
           </button>
+          
+          <div className="hidden sm:block">
+            <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="relative" ref={notificationsRef}>
+        <div className="flex items-center gap-4">
+          {/* Notifications */}
+          <div className="relative" ref={notificationRef}>
             <button
-              onClick={() => setIsNotificationsOpen(prev => !prev)}
-              className="relative text-gray-500 hover:text-gray-700"
+              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <Bell className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                3
               </span>
             </button>
-            {isNotificationsOpen && <NotificationDropdown />}
+
+            {isNotificationOpen && <NotificationDropdown />}
           </div>
 
-          <div className="h-8 w-px bg-gray-200 hidden sm:block"></div>
-
-          <div className="flex items-center space-x-2">
-             <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                JD
-              </div>
-            <div className="hidden sm:block">
-              <div className="font-medium text-gray-800 text-sm">John Doe</div>
-              <div className="text-xs text-gray-500">Admin</div>
+          {/* User Profile */}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:block text-right">
+              <p className="text-sm font-medium text-gray-900">Admin User</p>
+              <p className="text-xs text-gray-500">Administrator</p>
+            </div>
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">A</span>
             </div>
           </div>
         </div>

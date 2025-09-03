@@ -1,121 +1,184 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Receipt, 
-  Settings, 
+  Home, 
   Users, 
-  TrendingUp,
-  FileText,
+  TrendingUp, 
+  FileText, 
+  Mail, 
+  Settings, 
+  ChevronDown,
+  ChevronRight,
   LogOut,
-  Leaf,
-  X,
-  Mail // New
+  FolderOpen,
+  X
 } from 'lucide-react';
 
 interface SidebarProps {
-  isAdmin?: boolean;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  onClose: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen }) => {
-  const location = useLocation();
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const [usersExpanded, setUsersExpanded] = useState(false);
+  const navigate = useNavigate();
 
-  const userMenuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Briefcase, label: 'Portfolio', path: '/portfolio' },
-    { icon: Receipt, label: 'Transactions', path: '/transactions' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  const menuItems = [
+    { 
+      name: 'Dashboard', 
+      icon: Home, 
+      path: '/admin',
+      exact: true
+    },
+    { 
+      name: 'Users', 
+      icon: Users, 
+      path: '/admin/users',
+      hasSubmenu: true,
+      submenuItems: [
+        { name: 'All Users', path: '/admin/users' },
+        { name: 'Add User', path: '/admin/users/add' }
+      ]
+    },
+    { 
+      name: 'Investments', 
+      icon: TrendingUp, 
+      path: '/admin/investments' 
+    },
+    { 
+      name: 'Reports', 
+      icon: FileText, 
+      path: '/admin/reports' 
+    },
+    { 
+      name: 'Email', 
+      icon: Mail, 
+      path: '/admin/email' 
+    },
+    { 
+      name: 'File Manager', 
+      icon: FolderOpen, 
+      path: '/admin/file-manager' 
+    },
+    { 
+      name: 'Settings', 
+      icon: Settings, 
+      path: '/admin/settings' 
+    }
   ];
-
-  const adminMenuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-    { icon: Users, label: 'Users', path: '/admin/users' },
-    { icon: TrendingUp, label: 'Investments', path: '/admin/investments' },
-    { icon: FileText, label: 'Reports', path: '/admin/reports' },
-    { icon: Mail, label: 'Email', path: '/admin/email' }, // New
-    { icon: Settings, label: 'Settings', path: '/admin/settings' },
-  ];
-
-  const menuItems = isAdmin ? adminMenuItems : userMenuItems;
-
-  const sidebarContent = (
-    <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 rounded-lg flex items-center justify-center shadow-lg">
-              <Leaf className="w-6 h-6 text-white" />
-            </div>
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-2 h-2 text-white" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent">
-              GrowWithUs
-            </h1>
-            <p className="text-xs text-gray-500 font-medium">COMPANY</p>
-          </div>
-        </div>
-        <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-500 hover:text-gray-700">
-          <X className="w-6 h-6" />
-        </button>
-      </div>
-      
-      <nav className="mt-6 flex-1">
-        {menuItems.map((item) => {
-          const isActive = location.pathname.startsWith(item.path) && (item.path !== '/admin' || location.pathname === '/admin');
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => setIsOpen(false)}
-              className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-emerald-50 text-emerald-600 border-r-4 border-emerald-500'
-                  : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
-              }`}
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <div className="p-4 border-t border-gray-200">
-        <Link
-          to="/login"
-          className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors"
-        >
-          <LogOut className="w-5 h-5 mr-3" />
-          Logout
-        </Link>
-      </div>
-    </div>
-  );
 
   return (
     <>
-      {/* Mobile Sidebar */}
-      <div 
-        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setIsOpen(false)}></div>
+      {/* Mobile Overlay */}
+      {isOpen && (
         <div 
-          className={`relative w-64 h-full bg-white shadow-xl transition-transform duration-300 ease-in-out ${isOpen ? 'transform-none' : '-translate-x-full'}`}
-        >
-          {sidebarContent}
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0 md:relative md:shadow-none
+      `}>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">GW</span>
+            </div>
+            <span className="font-bold text-gray-900">GrowWithUs</span>
+          </div>
+          
+          {/* Close button for mobile */}
+          <button
+            onClick={onClose}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-600" />
+          </button>
         </div>
-      </div>
 
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:w-64 lg:flex-shrink-0">
-        <div className="flex flex-col w-64 bg-white shadow-sm border-r border-gray-200">
-          {sidebarContent}
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {menuItems.map((item) => (
+            <div key={item.name}>
+              {item.hasSubmenu ? (
+                <>
+                  <button
+                    onClick={() => setUsersExpanded(!usersExpanded)}
+                    className="w-full flex items-center justify-between px-3 py-2 text-gray-700 rounded-lg hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <item.icon className="w-5 h-5" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    {usersExpanded ? (
+                      <ChevronDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" />
+                    )}
+                  </button>
+                  
+                  {usersExpanded && (
+                    <div className="ml-8 mt-2 space-y-1">
+                      {item.submenuItems?.map((subItem) => (
+                        <NavLink
+                          key={subItem.name}
+                          to={subItem.path}
+                          onClick={onClose}
+                          className={({ isActive }) =>
+                            `block px-3 py-2 text-sm rounded-lg transition-colors ${
+                              isActive
+                                ? 'bg-emerald-100 text-emerald-700 border-r-2 border-emerald-500'
+                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                            }`
+                          }
+                        >
+                          {subItem.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <NavLink
+                  to={item.path}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-emerald-100 text-emerald-700 border-r-2 border-emerald-500'
+                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                    }`
+                  }
+                  end={item.exact}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="font-medium">{item.name}</span>
+                </NavLink>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* Logout */}
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center space-x-3 px-3 py-2 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium">Logout</span>
+          </button>
         </div>
       </div>
     </>

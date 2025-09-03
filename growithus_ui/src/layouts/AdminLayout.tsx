@@ -4,15 +4,24 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
 const AdminLayout: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-emerald-50/50 via-teal-50/50 to-cyan-50/50">
-      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isAdmin={true} />
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
+        <Header onMenuToggle={toggleSidebar} />
+        
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
           <Outlet />
         </main>
       </div>
