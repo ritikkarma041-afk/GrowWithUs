@@ -16,7 +16,7 @@ const generateMockUsers = (count: number): UserWithRole[] => {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     email: faker.internet.email(),
-    avatar: faker.image.avatar(),
+    avatar: faker.image.avatarLegacy(),
     role: faker.helpers.arrayElement<Role>(['admin', 'manager', 'staff', 'client', 'auditor']),
   }));
 };

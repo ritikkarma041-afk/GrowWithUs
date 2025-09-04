@@ -9,8 +9,8 @@ import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import TermsOfService from './pages/TermsOfService';
-import ForgotPassword from './pages/ForgotPassword'; // New
-import ResetPassword from './pages/ResetPassword'; // New
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // User Pages
 import UserDashboard from './pages/UserDashboard';
@@ -26,7 +26,8 @@ import AdminInvestments from './pages/admin/Investments';
 import AdminReports from './pages/admin/Reports';
 import AdminEmail from './pages/admin/Email';
 import AdminSettings from './pages/admin/Settings';
-import AddUser from './pages/admin/AddUser'; // New
+import AddUser from './pages/admin/AddUser';
+import RolesPage from './pages/admin/Roles';
 
 function App() {
   return (
@@ -38,8 +39,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} /> {/* New */}
-          <Route path="/reset-password" element={<ResetPassword />} /> {/* New */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* User Routes with Layout */}
           <Route element={<UserLayout />}>
@@ -53,8 +54,9 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/users/add" element={<AddUser />} /> {/* New */}
+            <Route path="/admin/users/add" element={<AddUser />} />
             <Route path="/admin/users/:id" element={<UserDetail />} />
+            <Route path="/admin/roles" element={<RolesPage />} />
             <Route path="/admin/investments" element={<AdminInvestments />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/email" element={<AdminEmail />} />
