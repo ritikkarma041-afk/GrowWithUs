@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { UploadCloud, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 // import placeholderLogo from '@/assets/images/placeholder-logo.png';
 
 const CompanyProfile: React.FC = () => {

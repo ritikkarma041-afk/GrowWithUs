@@ -11,7 +11,8 @@ import {
   LogOut,
   Leaf,
   X,
-  Mail // New
+  Mail,// New
+  FolderOpen
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -37,6 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
     { icon: FileText, label: 'Reports', path: '/admin/reports' },
     { icon: Mail, label: 'Email', path: '/admin/email' }, // New
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
+    { icon: FolderOpen, label: 'File Manager', path: '/admin/file_manager' }, // New
   ];
 
   const menuItems = isAdmin ? adminMenuItems : userMenuItems;
