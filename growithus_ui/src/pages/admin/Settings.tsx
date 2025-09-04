@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building, Lock, Bell, CreditCard, SlidersHorizontal, KeyRound } from 'lucide-react';
+import { Building, Lock, Bell, CreditCard, SlidersHorizontal, KeyRound, Shield } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CompanyProfile from '../../components/admin/settings/CompanyProfile';
 import SecuritySettings from '../../components/admin/settings/SecuritySettings';
@@ -7,12 +7,14 @@ import NotificationSettings from '../../components/admin/settings/NotificationSe
 import BillingSettings from '../../components/admin/settings/BillingSettings';
 import Integrations from '../../components/admin/settings/Integrations';
 import ApiKeys from '../../components/admin/settings/ApiKeys';
+import RolesAndPermissions from '../../components/admin/settings/RolesAndPermissions';
 
 const AdminSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('company');
 
   const tabs = [
     { id: 'company', label: 'Company Profile', icon: Building },
+    { id: 'roles', label: 'Roles & Permissions', icon: Shield },
     { id: 'security', label: 'Security', icon: Lock },
     { id: 'notifications', label: 'Admin Notifications', icon: Bell },
     { id: 'billing', label: 'Platform Billing', icon: CreditCard },
@@ -23,6 +25,7 @@ const AdminSettings: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'company': return <CompanyProfile />;
+      case 'roles': return <RolesAndPermissions />;
       case 'security': return <SecuritySettings />;
       case 'notifications': return <NotificationSettings />;
       case 'billing': return <BillingSettings />;

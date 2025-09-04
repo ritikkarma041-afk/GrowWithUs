@@ -1,4 +1,3 @@
-
 -- Create a custom type for user roles
 CREATE TYPE user_role AS ENUM ('user', 'admin');
 

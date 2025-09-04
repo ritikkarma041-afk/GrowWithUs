@@ -1,4 +1,3 @@
-
 \c growwithus_db
 
 CREATE TABLE IF NOT EXISTS users (
