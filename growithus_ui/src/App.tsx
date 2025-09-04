@@ -28,6 +28,7 @@ import AdminReports from './pages/admin/Reports';
 import AdminEmail from './pages/admin/Email';
 import AdminSettings from './pages/admin/Settings';
 import AddUser from './pages/admin/AddUser';
+import FileManager from './pages/admin/FileManager';
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/email" element={<AdminEmail />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/file_manager" element={<FileManager />} />
           </Route>
         </Routes>
       </div>
