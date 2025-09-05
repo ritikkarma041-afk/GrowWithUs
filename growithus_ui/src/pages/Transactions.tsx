@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, Filter, Download, ArrowUpDown } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { faker } from '@faker-js/faker';
@@ -8,22 +8,25 @@ const Transactions: React.FC = () => {
   const [filterType, setFilterType] = useState('all');
   const [sortBy, setSortBy] = useState('date');
 
-  const transactions = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    date: faker.date.recent({ days: 90 }).toISOString().split('T')[0],
-    type: faker.helpers.arrayElement(['Buy', 'Sell', 'Dividend', 'Transfer']),
-    symbol: faker.helpers.arrayElement(['RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'ICICIBANK', 'HINDUNILVR', 'ITC']),
-    description: faker.lorem.words(3),
-    quantity: faker.number.int({ min: 1, max: 100 }),
-    price: faker.number.float({ min: 500, max: 3000, fractionDigits: 2 }),
-    amount: 0,
-    status: faker.helpers.arrayElement(['Completed', 'Pending', 'Failed']),
-    fee: faker.number.float({ min: 0, max: 150, fractionDigits: 2 })
-  }));
+  const transactions = useMemo(() => {
+    faker.seed(789);
+    const txs = Array.from({ length: 50 }, () => ({
+      id: faker.string.uuid(),
+      date: faker.date.recent({ days: 90 }).toISOString().split('T')[0],
+      type: faker.helpers.arrayElement(['Buy', 'Sell', 'Dividend', 'Transfer'] as const),
+      symbol: faker.helpers.arrayElement(['RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'ICICIBANK', 'HINDUNILVR', 'ITC']),
+      description: faker.lorem.words(3),
+      quantity: faker.number.int({ min: 1, max: 100 }),
+      price: faker.number.float({ min: 500, max: 3000, fractionDigits: 2 }),
+      amount: 0,
+      status: faker.helpers.arrayElement(['Completed', 'Pending', 'Failed'] as const),
+      fee: faker.number.float({ min: 0, max: 150, fractionDigits: 2 })
+    }));
+    txs.forEach(transaction => { transaction.amount = transaction.quantity * transaction.price; });
+    return txs;
+  }, []);
 
-  transactions.forEach(transaction => { transaction.amount = transaction.quantity * transaction.price; });
-
-  const filteredTransactions = transactions
+  const filteredTransactions = useMemo(() => transactions
     .filter(transaction => (transaction.symbol.toLowerCase().includes(searchTerm.toLowerCase()) || transaction.description.toLowerCase().includes(searchTerm.toLowerCase())) && (filterType === 'all' || transaction.type.toLowerCase() === filterType))
     .sort((a, b) => {
       switch (sortBy) {
@@ -32,7 +35,7 @@ const Transactions: React.FC = () => {
         case 'symbol': return a.symbol.localeCompare(b.symbol);
         default: return 0;
       }
-    });
+    }), [transactions, searchTerm, filterType, sortBy]);
 
   const getTypeColor = (type: string) => {
     switch (type) {

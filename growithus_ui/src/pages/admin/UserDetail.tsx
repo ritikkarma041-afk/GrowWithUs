@@ -20,7 +20,7 @@ const generateUserData = (id: string) => {
     phone: faker.phone.number(),
     status: faker.helpers.arrayElement(['Active', 'Inactive', 'Pending']) as 'Active' | 'Inactive' | 'Pending',
     joinDate: faker.date.past({ years: 2 }).toLocaleDateString(),
-    avatar: faker.image.avatar(),
+    avatar: faker.image.avatarLegacy(),
     totalInvested: faker.number.int({ min: 500000, max: 10000000 }),
     totalWithdrawn: faker.number.int({ min: 0, max: 2000000 }),
     address: {

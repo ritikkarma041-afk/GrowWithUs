@@ -29,6 +29,8 @@ import AdminEmail from './pages/admin/Email';
 import AdminSettings from './pages/admin/Settings';
 import AddUser from './pages/admin/AddUser';
 import FileManager from './pages/admin/FileManager';
+import RolesPage from './pages/admin/Roles';
+import AccessControl from './pages/admin/AccessControl'; // New
 
 function App() {
   return (
@@ -57,6 +59,8 @@ function App() {
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/users/add" element={<AddUser />} />
             <Route path="/admin/users/:id" element={<UserDetail />} />
+            <Route path="/admin/roles" element={<RolesPage />} />
+            <Route path="/admin/access-control" element={<AccessControl />} />
             <Route path="/admin/investments" element={<AdminInvestments />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/email" element={<AdminEmail />} />

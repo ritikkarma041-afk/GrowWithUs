@@ -12,7 +12,9 @@ import {
   Leaf,
   X,
   Mail,// New
-  FolderOpen
+  FolderOpen,
+  Shield,
+  KeyRound // New
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -34,9 +36,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
   const adminMenuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: Users, label: 'Users', path: '/admin/users' },
+    { icon: Shield, label: 'User Roles', path: '/admin/roles' },
+    { icon: KeyRound, label: 'Access Control', path: '/admin/access-control' },
     { icon: TrendingUp, label: 'Investments', path: '/admin/investments' },
     { icon: FileText, label: 'Reports', path: '/admin/reports' },
-    { icon: Mail, label: 'Email', path: '/admin/email' }, // New
+    { icon: Mail, label: 'Email', path: '/admin/email' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
     { icon: FolderOpen, label: 'File Manager', path: '/admin/file_manager' }, // New
   ];
