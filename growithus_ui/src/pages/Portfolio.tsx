@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, Filter, TrendingUp, TrendingDown, Percent, IndianRupee } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import ReactECharts from 'echarts-for-react';
@@ -8,48 +8,53 @@ import PageHeader from '../components/PageHeader';
 const Portfolio: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const holdings = Array.from({ length: 12 }, (_, index) => ({
-    id: index + 1,
-    symbol: faker.helpers.arrayElement(['RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'ICICIBANK', 'HINDUNILVR', 'ITC', 'SBIN', 'BAJFINANCE', 'KOTAKBANK', 'WIPRO', 'ASIANPAINT']),
-    name: faker.company.name(),
-    shares: faker.number.int({ min: 10, max: 500 }),
-    price: faker.number.float({ min: 500, max: 3000, fractionDigits: 2 }),
-    change: faker.number.float({ min: -5, max: 8, fractionDigits: 2 }),
-    marketValue: 0,
-    allocation: 0
-  }));
+  const { holdings, totalValue, allocationOption, performanceOption } = useMemo(() => {
+    faker.seed(456);
+    const holdings = Array.from({ length: 12 }, () => ({
+      id: faker.string.uuid(),
+      symbol: faker.helpers.arrayElement(['RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'ICICIBANK', 'HINDUNILVR', 'ITC', 'SBIN', 'BAJFINANCE', 'KOTAKBANK', 'WIPRO', 'ASIANPAINT']),
+      name: faker.company.name(),
+      shares: faker.number.int({ min: 10, max: 500 }),
+      price: faker.number.float({ min: 500, max: 3000, fractionDigits: 2 }),
+      change: faker.number.float({ min: -5, max: 8, fractionDigits: 2 }),
+      marketValue: 0,
+      allocation: 0
+    }));
 
-  const totalValue = holdings.reduce((sum, holding) => sum + (holding.shares * holding.price), 0);
-  holdings.forEach(holding => {
-    holding.marketValue = holding.shares * holding.price;
-    holding.allocation = (holding.marketValue / totalValue) * 100;
-  });
+    const totalValue = holdings.reduce((sum, holding) => sum + (holding.shares * holding.price), 0);
+    holdings.forEach(holding => {
+      holding.marketValue = holding.shares * holding.price;
+      holding.allocation = (holding.marketValue / totalValue) * 100;
+    });
 
-  const allocationOption = {
-    title: { text: 'Asset Allocation', left: 'center', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
-    tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: ₹{c} ({d}%)' },
-    series: [{ name: 'Portfolio', type: 'pie', radius: '50%', data: holdings.slice(0, 6).map(holding => ({ value: holding.marketValue, name: holding.symbol, itemStyle: { color: faker.helpers.arrayElement(['#10b981', '#34d399', '#06b6d4', '#0891b2', '#22d3ee', '#67e8f9']) } })), emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } } }]
-  };
+    const allocationOption = {
+      title: { text: 'Asset Allocation', left: 'center', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
+      tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: ₹{c} ({d}%)' },
+      series: [{ name: 'Portfolio', type: 'pie', radius: '50%', data: holdings.slice(0, 6).map(holding => ({ value: holding.marketValue, name: holding.symbol, itemStyle: { color: faker.helpers.arrayElement(['#059669', '#10b981', '#0891b2', '#0e7490', '#06b6d4', '#22d3ee']) } })), emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } } }]
+    };
 
-  const performanceData = Array.from({ length: 30 }, (_, i) => {
-    const baseValue = 10000000;
-    const randomWalk = faker.number.float({ min: -200000, max: 300000 });
-    return baseValue + (i * 100000) + randomWalk;
-  });
+    const performanceData = Array.from({ length: 30 }, (_, i) => {
+      const baseValue = 10000000;
+      const randomWalk = faker.number.float({ min: -200000, max: 300000 });
+      return baseValue + (i * 100000) + randomWalk;
+    });
 
-  const performanceOption = {
-    title: { text: 'Portfolio Performance (30 Days)', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
-    tooltip: { trigger: 'axis', formatter: function(params: any) { return `Day ${params[0].dataIndex + 1}: ₹${params[0].value.toLocaleString('en-IN')}`; } },
-    xAxis: { type: 'category', data: Array.from({ length: 30 }, (_, i) => `D${i + 1}`) },
-    yAxis: { type: 'value', axisLabel: { formatter: '₹{value}' } },
-    series: [{ data: performanceData, type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#10b981', width: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(16, 185, 129, 0.2)' }, { offset: 1, color: 'rgba(16, 185, 129, 0.05)' }] } } }],
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
-  };
+    const performanceOption = {
+      title: { text: 'Portfolio Performance (30 Days)', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
+      tooltip: { trigger: 'axis', formatter: function(params: any) { return `Day ${params[0].dataIndex + 1}: ₹${params[0].value.toLocaleString('en-IN')}`; } },
+      xAxis: { type: 'category', data: Array.from({ length: 30 }, (_, i) => `D${i + 1}`) },
+      yAxis: { type: 'value', axisLabel: { formatter: '₹{value}' } },
+      series: [{ data: performanceData, type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#059669', width: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(5, 150, 105, 0.2)' }, { offset: 1, color: 'rgba(5, 150, 105, 0.05)' }] } } }],
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
+    };
 
-  const filteredHoldings = holdings.filter(holding =>
+    return { holdings, totalValue, allocationOption, performanceOption };
+  }, []);
+
+  const filteredHoldings = useMemo(() => holdings.filter(holding =>
     holding.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
     holding.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ), [holdings, searchTerm]);
 
   return (
     <div>

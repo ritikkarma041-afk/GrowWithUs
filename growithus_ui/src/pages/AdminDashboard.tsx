@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, TrendingUp, Edit2, Trash2, MoreHorizontal, Mail, UserPlus, IndianRupee, Send } from 'lucide-react';
 import StatCard from '../components/StatCard';
@@ -13,32 +13,36 @@ const AdminDashboard: React.FC = () => {
   const [inviteSent, setInviteSent] = useState(false);
   const [lastInvitedEmail, setLastInvitedEmail] = useState('');
 
-  const users = Array.from({ length: 5 }, (_, index) => ({
-    id: index + 1,
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    status: faker.helpers.arrayElement(['Active', 'Inactive', 'Pending']),
-    joinDate: faker.date.recent({ days: 365 }).toLocaleDateString(),
-    investment: `₹${faker.number.int({ min: 100000, max: 5000000 }).toLocaleString('en-IN')}`
-  }));
+  const { users, userGrowthOption, investmentOption } = useMemo(() => {
+    faker.seed(123);
+    const users = Array.from({ length: 5 }, () => ({
+      id: faker.string.uuid(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      status: faker.helpers.arrayElement(['Active', 'Inactive', 'Pending'] as const),
+      joinDate: faker.date.recent({ days: 365 }).toLocaleDateString(),
+      investment: `₹${faker.number.int({ min: 100000, max: 5000000 }).toLocaleString('en-IN')}`
+    }));
 
-  const userGrowthOption = {
-    title: { text: 'User Growth', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
-    tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
-    yAxis: { type: 'value' },
-    series: [{ data: [120, 190, 300, 500, 700, 850], type: 'bar', itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#059669' }, { offset: 1, color: '#10b981' }] } } }],
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
-  };
+    const userGrowthOption = {
+      title: { text: 'User Growth', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
+      tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+      yAxis: { type: 'value' },
+      series: [{ data: [120, 190, 300, 500, 700, 850], type: 'bar', itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#059669' }, { offset: 1, color: '#10b981' }] } } }],
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
+    };
 
-  const investmentOption = {
-    title: { text: 'Total Investments', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
-    tooltip: { trigger: 'axis', formatter: '{b}: ₹{c} Cr' },
-    xAxis: { type: 'category', data: ['Q1', 'Q2', 'Q3', 'Q4'] },
-    yAxis: { type: 'value', axisLabel: { formatter: '₹{value} Cr' } },
-    series: [{ data: [12.5, 18.2, 25.8, 32.1], type: 'line', smooth: true, lineStyle: { color: '#0891b2', width: 3 }, itemStyle: { color: '#0891b2' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(8, 145, 178, 0.3)' }, { offset: 1, color: 'rgba(8, 145, 178, 0.1)' }] } } }],
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
-  };
+    const investmentOption = {
+      title: { text: 'Total Investments', textStyle: { fontSize: 16, fontWeight: 'bold', color: '#374151' } },
+      tooltip: { trigger: 'axis', formatter: '{b}: ₹{c} Cr' },
+      xAxis: { type: 'category', data: ['Q1', 'Q2', 'Q3', 'Q4'] },
+      yAxis: { type: 'value', axisLabel: { formatter: '₹{value} Cr' } },
+      series: [{ data: [12.5, 18.2, 25.8, 32.1], type: 'line', smooth: true, lineStyle: { color: '#0891b2', width: 3 }, itemStyle: { color: '#0891b2' }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(8, 145, 178, 0.3)' }, { offset: 1, color: 'rgba(8, 145, 178, 0.1)' }] } } }],
+      grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true }
+    };
+    return { users, userGrowthOption, investmentOption };
+  }, []);
 
   const resetAndCloseModal = () => {
     setIsModalOpen(false);
