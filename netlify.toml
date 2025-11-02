@@ -1,6 +1,6 @@
 [build]
   command = "npm install && npm run build"
-  publish = "growithus_ui/dist"
+  publish = "dist"
   base = "growithus_ui"
   ignore = "false"  # Never skip build
   force = "true"    # Force build even if no changes detected
