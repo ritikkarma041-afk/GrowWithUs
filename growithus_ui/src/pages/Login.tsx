@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, TrendingUp, Leaf, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react';
-import apiClient from '@/api/axios';
-import authBg from '@/assets/svg/auth-background.svg';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  Eye,
+  EyeOff,
+  TrendingUp,
+  Leaf,
+  Mail,
+  Lock,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
+import apiClient from "@/api/axios";
+import authBg from "@/assets/svg/auth-background.svg";
+import { useAuthStore } from "@/context/authStore";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { dispatch } = useAuthStore();
 
   useEffect(() => {
     if (location.state?.message) {
@@ -26,23 +37,39 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await apiClient.post('/auth/login', {
-        email,
-        password
+      const response = await apiClient.post("/login", {
+        username: email,
+        password,
       });
-      
+      console.log("Login response:", response.data);
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        if (response.data.user.role === 'admin') {
-          navigate('/admin');
+        localStorage.setItem("token", response.data.token);
+        const userDate = {
+          userId: response.data.user.id,
+          name: response.data.user.username,
+          role: "user",
+          details: response.data.user,
+        };
+
+        // store in global auth store
+        dispatch({
+          type: "LOGIN",
+          payload: { token: response.data.token, user: userDate },
+        });
+
+        // Redirect based on role
+        if (response.data.user.role === "admin") {
+          navigate("/admin");
         } else {
-          navigate('/dashboard');
+          navigate("/dashboard");
         }
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -52,9 +79,12 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url(${authBg})`,
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${authBg})`,
+          }}
+        />
       </div>
 
       {/* Floating Background Elements */}
@@ -76,10 +106,10 @@ const Login: React.FC = () => {
             </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 bg-clip-text text-transparent mb-2">
-            GrowWithUs
+            GroWithUs
           </h1>
           <p className="text-sm font-medium text-gray-500 mb-4">COMPANY</p>
-          <p className="text-lg text-gray-600">Professional Trading Platform</p>
+          {/* <p className="text-lg text-gray-600">Professional Trading Platform</p> */}
         </div>
 
         {/* Login Card */}
@@ -90,7 +120,7 @@ const Login: React.FC = () => {
               <span className="text-green-700 text-sm">{successMessage}</span>
             </div>
           )}
-          
+
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
               <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
@@ -100,7 +130,10 @@ const Login: React.FC = () => {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email Address
               </label>
               <div className="relative">
@@ -121,7 +154,10 @@ const Login: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
@@ -131,7 +167,7 @@ const Login: React.FC = () => {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   className="w-full pl-10 pr-4 py-3 bg-white/70 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent backdrop-blur-sm transition-all pr-12"
                   placeholder="Enter your password"
@@ -160,26 +196,32 @@ const Login: React.FC = () => {
                   type="checkbox"
                   className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-700"
+                >
                   Remember me
                 </label>
               </div>
 
-              <Link to="/forgot-password" className="text-sm text-emerald-500 hover:text-emerald-600 transition-colors font-medium">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-emerald-500 hover:text-emerald-600 transition-colors font-medium"
+              >
                 Forgot password?
               </Link>
             </div>
 
             <div className="space-y-2">
-            <Link to="/dashboard">
+              {/* <Link to="/dashboard"> */}
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? "Signing in..." : "Sign In"}
               </button>
-              </Link>
+              {/* </Link> */}
 
               <Link to="/admin">
                 <button
@@ -194,8 +236,11 @@ const Login: React.FC = () => {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="font-medium text-emerald-500 hover:text-emerald-600 transition-colors">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="font-medium text-emerald-500 hover:text-emerald-600 transition-colors"
+              >
                 Sign up
               </Link>
             </p>
