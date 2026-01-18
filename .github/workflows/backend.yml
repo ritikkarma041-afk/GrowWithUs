@@ -60,5 +60,5 @@ jobs:
               -e DB_NAME=${{ secrets.DB_NAME }} \
               backend
 
-            # Run Sequelize migrations
+            # Run Sequelize migrations test
             docker exec backend npx sequelize-cli db:migrate
