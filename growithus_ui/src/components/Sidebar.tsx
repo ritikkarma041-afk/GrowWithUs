@@ -1,21 +1,23 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Receipt, 
-  Settings, 
-  Users, 
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Briefcase,
+  Receipt,
+  Settings,
+  Users,
   TrendingUp,
   FileText,
   LogOut,
   Leaf,
   X,
-  Mail,// New
+  Mail, // New
   FolderOpen,
   Shield,
-  KeyRound // New
-} from 'lucide-react';
+  KeyRound, // New
+} from "lucide-react";
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth/authSlice";
 
 interface SidebarProps {
   isAdmin?: boolean;
@@ -23,30 +25,38 @@ interface SidebarProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isAdmin = false,
+  isOpen,
+  setIsOpen,
+}) => {
   const location = useLocation();
 
   const userMenuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Briefcase, label: 'Portfolio', path: '/portfolio' },
-    { icon: Receipt, label: 'Transactions', path: '/transactions' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    // Not yet implemented
+    // { icon: Briefcase, label: 'Portfolio', path: '/portfolio' },
+    // { icon: Receipt, label: 'Transactions', path: '/transactions' },
+    { icon: Settings, label: "Settings", path: "/settings" },
   ];
 
   const adminMenuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-    { icon: Users, label: 'Users', path: '/admin/users' },
-    { icon: Shield, label: 'User Roles', path: '/admin/roles' },
-    { icon: KeyRound, label: 'Access Control', path: '/admin/access-control' },
-    { icon: TrendingUp, label: 'Investments', path: '/admin/investments' },
-    { icon: FileText, label: 'Reports', path: '/admin/reports' },
-    { icon: Mail, label: 'Email', path: '/admin/email' },
-    { icon: Settings, label: 'Settings', path: '/admin/settings' },
-    { icon: FolderOpen, label: 'File Manager', path: '/admin/file_manager' }, // New
+    { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
+    { icon: Users, label: "Users", path: "/admin/users" },
+    { icon: Shield, label: "User Roles", path: "/admin/roles" },
+    { icon: KeyRound, label: "Access Control", path: "/admin/access-control" },
+    { icon: TrendingUp, label: "Investments", path: "/admin/investments" },
+    { icon: FileText, label: "Reports", path: "/admin/reports" },
+    { icon: Mail, label: "Email", path: "/admin/email" },
+    { icon: Settings, label: "Settings", path: "/admin/settings" },
+    { icon: FolderOpen, label: "File Manager", path: "/admin/file_manager" }, // New
   ];
 
   const menuItems = isAdmin ? adminMenuItems : userMenuItems;
-
+  const dispatch = useDispatch();
+  const onlogout = () => {
+    dispatch(logout());
+  };
   const sidebarContent = (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -66,14 +76,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
             <p className="text-xs text-gray-500 font-medium">COMPANY</p>
           </div>
         </div>
-        <button onClick={() => setIsOpen(false)} className="lg:hidden text-gray-500 hover:text-gray-700">
+        <button
+          onClick={() => onlogout()}
+          className="lg:hidden text-gray-500 hover:text-gray-700"
+        >
           <X className="w-6 h-6" />
         </button>
       </div>
-      
+
       <nav className="mt-6 flex-1">
         {menuItems.map((item) => {
-          const isActive = location.pathname.startsWith(item.path) && (item.path !== '/admin' || location.pathname === '/admin');
+          const isActive =
+            location.pathname.startsWith(item.path) &&
+            (item.path !== "/admin" || location.pathname === "/admin");
           return (
             <Link
               key={item.path}
@@ -81,8 +96,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
               onClick={() => setIsOpen(false)}
               className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-emerald-50 text-emerald-600 border-r-4 border-emerald-500'
-                  : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-600'
+                  ? "bg-emerald-50 text-emerald-600 border-r-4 border-emerald-500"
+                  : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-600"
               }`}
             >
               <item.icon className="w-5 h-5 mr-3" />
@@ -95,6 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
       <div className="p-4 border-t border-gray-200">
         <Link
           to="/login"
+          onClick={() => onlogout()}
           className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors"
         >
           <LogOut className="w-5 h-5 mr-3" />
@@ -107,12 +123,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false, isOpen, setIsOpen })
   return (
     <>
       {/* Mobile Sidebar */}
-      <div 
-        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      <div
+        className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setIsOpen(false)}></div>
-        <div 
-          className={`relative w-64 h-full bg-white shadow-xl transition-transform duration-300 ease-in-out ${isOpen ? 'transform-none' : '-translate-x-full'}`}
+        <div
+          className="absolute inset-0 bg-black bg-opacity-50"
+          onClick={() => setIsOpen(false)}
+        ></div>
+        <div
+          className={`relative w-64 h-full bg-white shadow-xl transition-transform duration-300 ease-in-out ${
+            isOpen ? "transform-none" : "-translate-x-full"
+          }`}
         >
           {sidebarContent}
         </div>

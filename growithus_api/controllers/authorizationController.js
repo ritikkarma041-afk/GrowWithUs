@@ -42,7 +42,6 @@ exports.register = async (req, res) => {
       passwordHash: encryptedPassword,
     },
     { transaction: trn });
-    console.log('User created with ID:', user);
     const userProfile = await UserProfile.create({
       userId: user.id,
       firstName,
@@ -52,7 +51,6 @@ exports.register = async (req, res) => {
       email
     }, { transaction: trn });
     await trn.commit();
-    console.log('UserProfile created for User ID:', userProfile);
     const accessToken = generateAccessToken(username, user.id);
     res.status(201).json({
       success: true,
