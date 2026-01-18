@@ -22,7 +22,6 @@ const schema = {
 const validate = ajv.compile(schema);
 
 exports.getUserTrn = async (req, res) => {
-    // console.log('Fetching transactions for user ID:', req);
     const usertrn = await UserTrn.findAll({ where: { userId: req.user.userId } });
     if (usertrn.length === 0) {
         return res.json({ success: true, data: [] });
@@ -51,7 +50,6 @@ exports.createUserTrn = async (trnReq, trnRes) => {
             destinationAccount,
             createdDate: transactionDate || new Date()
         });
-        // console.log('User transaction created successfully:', userTrn);
         trnRes.status(201).json({
             success: true,
             userTrn: { trnid: userTrn.id, userid: userTrn.userId, trnAmount: userTrn.amount, trnType: userTrn.transactionType }

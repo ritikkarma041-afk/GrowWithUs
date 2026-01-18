@@ -15,6 +15,12 @@ const UserAddressModel = {
   updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_address', UserAddressModel, {
-  timestamps: false
-});
+module.exports = (sequelize) => {
+  const UserAddress = sequelize.define('user_address', UserAddressModel, {
+    timestamps: false
+  });
+  UserAddress.belongsTo(sequelize.models.user_profile, {
+    foreignKey: 'userId',
+  });
+  return UserAddress;
+}

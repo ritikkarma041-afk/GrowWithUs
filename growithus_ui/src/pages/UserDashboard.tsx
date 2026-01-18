@@ -48,7 +48,6 @@ const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("initial call happened", auth);
     loadUserInvestments();
     if (!token) {
       navigate("/login");
@@ -58,20 +57,15 @@ const UserDashboard: React.FC = () => {
 
   const loadUserInvestments = async () => {
     // Placeholder for loading user investments from an API
-    console.log("loadUserInvestments called");
     try {
-      console.log("Fetching user transactions with token:", token);
       const response = await apiClient.get("/usertrn", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log("Login response:", response?.data?.data);
       const userTransactions = response?.data?.data;
-      console.log("User Transactions:", userTransactions);
       setTransactions(userTransactions);
       setUserInsvestments(userTransactions);
-      console.log("Transactions set in state.", transactions);
     } catch (err: any) {
       // setError(
       //   err.response?.data?.message || "Login failed. Please try again."
@@ -81,7 +75,6 @@ const UserDashboard: React.FC = () => {
     }
   };
   const setUserInsvestments = (transactions: Transactions) => {
-    console.log("setUserInvestments called with data:", transactions);
     // Filter DEPOSIT transactions
     const depositTransactions = transactions.filter(
       (tx) => tx.transactionType === "DEPOSIT"
@@ -246,7 +239,10 @@ const UserDashboard: React.FC = () => {
           title="Dashboard"
           subtitle="Welcome back! Here's your portfolio overview."
         />
-        <div className="flex space-x-2 sm:space-x-4 mt-4 sm:mt-0 w-full sm:w-auto">
+        <div
+          className="flex space-x-2 sm:space-x-4 mt-4 sm:mt-0 w-full sm:w-auto"
+          style={{ display: "none" }}
+        >
           <button
             onClick={() => setIsInvestModalOpen(true)}
             className="w-1/2 sm:w-auto px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 shadow-md text-sm"

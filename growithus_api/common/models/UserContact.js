@@ -9,9 +9,15 @@ const UserContactModel = {
   isPrimary: { type: DataTypes.BOOLEAN, defaultValue: false },
   Isdeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
   createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_contact', UserContactModel, {
-  timestamps: false
-});
+module.exports = (sequelize) => {
+  const UserContact = sequelize.define('user_contact', UserContactModel, {
+    timestamps: false
+  });
+  UserContact.belongsTo(sequelize.models.user_profile, {
+    foreignKey: 'userId',
+  });
+  return UserContact;
+}

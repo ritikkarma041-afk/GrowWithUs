@@ -11,6 +11,18 @@ const UserProfileModel = {
   updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_profile', UserProfileModel, {
-  timestamps: false
-});
+module.exports = (sequelize) => {
+  const UserProfile = sequelize.define('user_profile', UserProfileModel, {
+    timestamps: false
+  });
+
+  // Define the association here
+  const userAddress = require('./UserAddress')(sequelize); // Import Address model
+  const userContact = require('./UserContact')(sequelize); // Import Contact model
+
+  UserProfile.hasMany(userAddress, { foreignKey: 'userId', as: 'Address' });
+
+  UserProfile.hasMany(userContact, { foreignKey: 'userId', as: 'Contact' });
+
+  return UserProfile;
+}
