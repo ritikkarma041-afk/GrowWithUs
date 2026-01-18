@@ -6,8 +6,10 @@ const UserModel = {
   passwordHash: { type: DataTypes.TEXT, allowNull: false },
   status: { type: DataTypes.ENUM('ACTIVE', 'INACTIVE', 'BANNED', 'SUSPENDED', 'CLOSED'), defaultValue: 'ACTIVE' },
   lastLogin: { type: DataTypes.DATE, allowNull: true },
-  createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('users', UserModel);
+module.exports = (sequelize) => sequelize.define('users', UserModel, {
+  timestamps: false
+});

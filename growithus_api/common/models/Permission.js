@@ -3,10 +3,12 @@ const { DataTypes } = require('sequelize');
 const PermissionModel = {
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true, allowNull: false },
   name: { type: DataTypes.STRING, unique: true},
-  descrption: {type: DataTypes.TEXT},
+  description: {type: DataTypes.TEXT},
   IsActive: { type: DataTypes.BOOLEAN, defaultValue: true },
   createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  createdBy: {type: DateTypes.STRING}
+  createdBy: { type: DataTypes.STRING },
 };
 
-module.exports = (sequelize) => sequelize.define('permissions', PermissionModel);
+module.exports = (sequelize) => sequelize.define('permissions', PermissionModel, {
+  timestamps: false
+});

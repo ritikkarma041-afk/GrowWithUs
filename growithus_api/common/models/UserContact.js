@@ -8,8 +8,10 @@ const UserContactModel = {
   isVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
   isPrimary: { type: DataTypes.BOOLEAN, defaultValue: false },
   Isdeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
-  createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_contact', UserContactModel);
+module.exports = (sequelize) => sequelize.define('user_contact', UserContactModel, {
+  timestamps: false
+});

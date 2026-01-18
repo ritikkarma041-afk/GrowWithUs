@@ -7,8 +7,10 @@ const UserProfileModel = {
   dateOfBirth: { type: DataTypes.DATE, allowNull: true },
   gender: { type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER'), allowNull: true },
   email: { type: DataTypes.STRING, allowNull: false, unique: true },
-  createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_profile', UserProfileModel);
+module.exports = (sequelize) => sequelize.define('user_profile', UserProfileModel, {
+  timestamps: false
+});

@@ -23,6 +23,15 @@ const UserProfile = defineUserProfile(sequelize);
 const defineUserTransactions = require('./common/models/UserTransactions');
 const UserTransactions = defineUserTransactions(sequelize);
 
+const defineRole = require('./common/models/Role');
+const Role = defineRole(sequelize);
+const definePermission = require('./common/models/Permission');
+const Permission = definePermission(sequelize);
+const defineRolesAndPermission = require('./common/models/RolePermission');
+const RoleAndPermission = defineRolesAndPermission(sequelize);
+const defineUserRole = require('./common/models/UserRole');
+const UserRole = defineUserRole(sequelize);
+
 (async () => {
   try {
     sequelize.authenticate();
@@ -43,6 +52,9 @@ app.use('/api/user', userRoutes);
 
 const userTrnRoutes = require('./routes/userTrnRoutes');
 app.use('/api/usertrn', userTrnRoutes);
+
+const rolesAndPermissionRoutes = require('./routes/roleAndPermissionRoutes');
+app.use('/api/roles-permissions', rolesAndPermissionRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

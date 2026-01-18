@@ -9,11 +9,13 @@ const UserKycDocumentModel = {
   issuedDate: { type: DataTypes.DATE, allowNull: true },
   expiryDate: { type: DataTypes.DATE, allowNull: true },
   issuingCountry: { type: DataTypes.STRING, allowNull: false },
-  verifiedAt: { type: DataTypes.DATE, allowNull: true },
+  verifiedDate: { type: DataTypes.DATE, allowNull: true },
   verifiedBy: { type: DataTypes.UUID, allowNull: true },
   status: { type: DataTypes.ENUM('PENDING', 'VERIFIED', 'REJECTED'), defaultValue: 'PENDING' },
-  createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_kyc_document', UserKycDocumentModel);
+module.exports = (sequelize) => sequelize.define('user_kyc_document', UserKycDocumentModel, {
+  timestamps: false
+});

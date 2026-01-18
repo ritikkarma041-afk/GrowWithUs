@@ -12,4 +12,6 @@ const UserTransactionModel = {
   status: { type: DataTypes.ENUM('PENDING', 'SUCCESS', 'FAILED'), defaultValue: 'PENDING' },
 };
 
-module.exports = (sequelize) => sequelize.define('user_transactions', UserTransactionModel);
+module.exports = (sequelize) => sequelize.define('user_transactions', UserTransactionModel, {
+  timestamps: false
+});

@@ -11,8 +11,10 @@ const UserAddressModel = {
   ZipCode: { type: DataTypes.STRING, allowNull: false },
   Country: { type: DataTypes.STRING, allowNull: false },
   Isdeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
-  createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  updatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 };
 
-module.exports = (sequelize) => sequelize.define('user_address', UserAddressModel);
+module.exports = (sequelize) => sequelize.define('user_address', UserAddressModel, {
+  timestamps: false
+});

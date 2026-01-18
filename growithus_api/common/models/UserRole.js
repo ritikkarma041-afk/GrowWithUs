@@ -6,7 +6,9 @@ const UserRoleModel = {
     roleId: { type: DataTypes.UUID, allowNull: false },
     isdeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
     createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    createBy: { type: DataTypes.STRING }
+    createdBy: { type: DataTypes.STRING }
   };
 
-module.exports = (sequelize) => sequelize.define('user_roles', UserRoleModel);
+module.exports = (sequelize) => sequelize.define('user_roles', UserRoleModel, {
+  timestamps: false
+});
