@@ -31,6 +31,10 @@ const defineRolesAndPermission = require('./common/models/RolePermission');
 const RoleAndPermission = defineRolesAndPermission(sequelize);
 const defineUserRole = require('./common/models/UserRole');
 const UserRole = defineUserRole(sequelize);
+const defineUserAddress = require('./common/models/UserAddress');
+const UserAddress = defineUserAddress(sequelize);
+const defineUserContact = require('./common/models/UserContact');
+const UserContact = defineUserContact(sequelize);
 
 (async () => {
   try {
