@@ -3,7 +3,7 @@ name: Node Backend Deploy
 on:
   push:
     paths:
-      - 'growwithus_api/**'   # Only trigger if files inside growwithus_api changed
+      - 'growithus_api/**'   # Only trigger if files inside growwithus_api changed
     branches:
       - '*release*'           # Only trigger on branches with "release" in the name
 
