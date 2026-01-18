@@ -32,6 +32,7 @@ exports.getUserTrn = async (req, res) => {
 
 exports.getAllUserTrn = async (req, res) => {
     const usertrn = await UserTrn.findAll();
+    // testing
     res.json({ success: true, data: usertrn });
 };
 
