@@ -52,11 +52,11 @@ const Login: React.FC = () => {
         }
       );
 
-      if (response.data.token) {
+      if (response?.data?.token) {
         const userDate = {
           userId: response.data.user.id,
           name: response.data.user.username,
-          role: "user",
+          role: permisssions.data?.data?.find((x) => x)?.roleName ?? "User",
           details: response.data.user,
         };
 
@@ -65,12 +65,12 @@ const Login: React.FC = () => {
           loginSuccess({
             token: response.data.token,
             user: userDate,
-            userPermissions: permisssions.data.data,
+            userPermissions: permisssions?.data?.data ?? null,
           })
         );
 
         // Redirect based on role
-        if (permisssions.data?.data?.find((x) => x.roleName == "Admin")) {
+        if (permisssions.data?.data?.find((x) => x?.roleName == "Admin")) {
           navigate("/admin");
         } else {
           navigate("/dashboard");
