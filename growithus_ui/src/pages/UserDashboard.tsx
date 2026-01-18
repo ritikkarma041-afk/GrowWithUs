@@ -13,17 +13,18 @@ import ReactECharts from "echarts-for-react";
 import Modal from "../components/Modal";
 import PageHeader from "../components/PageHeader";
 import apiClient from "@/api/axios";
-import { useAuthStore } from "@/context/authStore";
+// import { useAuthStore } from "@/context/authStore";
 import { Transactions } from "@/interface/transactions";
 import { TransactionType } from "@/types/transactionType";
 import { calculateCompoundInterestWithBreakdown } from "../utils/calculateCompoundInterestWithBreakdown";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 const UserDashboard: React.FC = () => {
   const [currentValue, setCurrentValue] = useState(0);
   const [investedValue, setInvestedValue] = useState(0);
-
   const [transactions, setTransactions] = useState<Transactions[]>([]);
-
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [investmentAmount, setInvestmentAmount] = useState("");
@@ -41,12 +42,18 @@ const UserDashboard: React.FC = () => {
     [returns, investedValue]
   );
 
-  const { state } = useAuthStore();
-  const { token, user } = state;
+  // const { state } = useAuthStore();
+  const auth = useSelector((state: RootState) => state.auth);
+  const { token, user } = auth;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("initial callhappened");
+    console.log("initial call happened", auth);
     loadUserInvestments();
+    if (!token) {
+      navigate("/login");
+      return;
+    }
   }, []);
 
   const loadUserInvestments = async () => {

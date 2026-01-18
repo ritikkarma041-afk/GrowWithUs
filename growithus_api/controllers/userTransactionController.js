@@ -40,14 +40,15 @@ exports.createUserTrn = async (trnReq, trnRes) => {
         if (!validate(trnReq.body)) {
             return trnRes.status(400).json({ success: false, error: 'Invalid input', details: validate.errors });
         }
-        const { userId, amount, transactionType, paymentMode, transactionReferenceId, destinationAccount } = trnReq.body;
+        const { userId, amount, transactionType, paymentMode, transactionReferenceId, destinationAccount, transactionDate } = trnReq.body;
         const userTrn = await UserTrn.create({
             userId,
             amount,
             transactionType,
             paymentMode,
             transactionReferenceId,
-            destinationAccount
+            destinationAccount,
+            createdDate: transactionDate || new Date()
         });
         // console.log('User transaction created successfully:', userTrn);
         trnRes.status(201).json({

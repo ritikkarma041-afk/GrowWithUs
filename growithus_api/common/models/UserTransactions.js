@@ -8,7 +8,7 @@ const UserTransactionModel = {
   transactionType: { type: DataTypes.ENUM('DEPOSIT', 'WITHDRAW'), allowNull: false },
   paymentMode: { type: DataTypes.ENUM('UPI', 'CARD', 'NET_BANKING', 'WALLET') },
   transactionReferenceId: { type: DataTypes.STRING, unique: true, allowNull: false },
-  destinationAccount: { type: DataTypes.STRING, allowNull: false },
+  destinationAccount: { type: DataTypes.STRING, allowNull: true },
   status: { type: DataTypes.ENUM('PENDING', 'SUCCESS', 'FAILED'), defaultValue: 'PENDING' },
 };
 

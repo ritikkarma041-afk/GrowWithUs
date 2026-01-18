@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import apiClient from "@/api/axios";
 import authBg from "@/assets/svg/auth-background.svg";
-import { useAuthStore } from "@/context/authStore";
+import { useDispatch } from "react-redux";
+import { loginSuccess, logout } from "@/features/auth/authSlice";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,8 +24,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { dispatch } = useAuthStore();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (location.state?.message) {
       setSuccessMessage(location.state.message);
@@ -43,9 +43,16 @@ const Login: React.FC = () => {
         username: email,
         password,
       });
-      console.log("Login response:", response.data);
+      const permisssions = await apiClient.get(
+        "/roles-permissions/user-roles-permissions",
+        {
+          headers: {
+            Authorization: `Bearer ${response?.data?.token}`,
+          },
+        }
+      );
+
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
         const userDate = {
           userId: response.data.user.id,
           name: response.data.user.username,
@@ -54,13 +61,16 @@ const Login: React.FC = () => {
         };
 
         // store in global auth store
-        dispatch({
-          type: "LOGIN",
-          payload: { token: response.data.token, user: userDate },
-        });
+        dispatch(
+          loginSuccess({
+            token: response.data.token,
+            user: userDate,
+            userPermissions: permisssions.data.data,
+          })
+        );
 
         // Redirect based on role
-        if (response.data.user.role === "admin") {
+        if (permisssions.data?.data?.find((x) => x.roleName == "Admin")) {
           navigate("/admin");
         } else {
           navigate("/dashboard");
@@ -70,6 +80,7 @@ const Login: React.FC = () => {
       setError(
         err.response?.data?.message || "Login failed. Please try again."
       );
+      dispatch(logout());
     } finally {
       setLoading(false);
     }
