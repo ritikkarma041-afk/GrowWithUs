@@ -46,8 +46,15 @@ jobs:
             git reset --hard origin/${GITHUB_REF#refs/heads/}
 
             # Stop old container
-            docker stop backend || true
-            docker rm backend || true
+            # docker stop backend || true
+            # docker rm backend || true
+
+            # Stop & remove any container using port 3000
+            docker ps -q --filter "publish=3000" | xargs -r docker stop
+            docker ps -aq --filter "publish=3000" | xargs -r docker rm
+
+            # Also remove backend container if exists
+            docker rm -f backend || true
 
             # Build and run Docker container
             docker build -t backend .
