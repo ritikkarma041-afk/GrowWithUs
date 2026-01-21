@@ -1,0 +1,71 @@
+name: Node Backend Deploy
+
+on:
+  push:
+    paths:
+      - 'growithus_api/**'   # Only trigger if files inside growithus_api changed
+    branches:
+      - '*release*'           # Only trigger on branches with "release" in the name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+
+      - name: Build Docker image
+        run: |
+          cd growithus_api
+          docker build -t backend .
+
+      - name: SSH & Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            mkdir -p ~/backend
+            cd ~/backend
+
+            # Initialize git if needed
+            if [ ! -d ".git" ]; then
+              git init
+              git remote add origin https://github.com/<your-username>/<repo>.git
+            fi
+
+            # Pull latest code from the release branch
+            git fetch
+            git reset --hard origin/${GITHUB_REF#refs/heads/}
+
+            # Stop old container
+            # docker stop backend || true
+            # docker rm backend || true
+
+            # Stop & remove any container using port 3000
+            docker ps -q --filter "publish=3000" | xargs -r docker stop
+            docker ps -aq --filter "publish=3000" | xargs -r docker rm
+
+            # Also remove backend container if exists
+            docker rm -f backend || true
+
+            # Build and run Docker container
+            docker build -t backend .
+            docker run -d --name backend \
+              -p 3000:3000 \
+              -e NODE_ENV=production \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              backend
+
+            # Run Sequelize migrations test
+            docker exec backend npx sequelize-cli db:migrate
