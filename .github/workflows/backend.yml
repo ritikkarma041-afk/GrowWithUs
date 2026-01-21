@@ -3,16 +3,16 @@ name: Node Backend Deploy
 on:
   push:
     paths:
-      - 'growithus_api/**'   # Only trigger if files inside growithus_api changed
+      - 'growithus_api/**'
     branches:
-      - '*release*'           # Only trigger on branches with "release" in the name
+      - '*release*'
 
   workflow_dispatch:
     inputs:
-      branch:
+      deploy_branch:
         description: 'Branch to deploy'
         required: true
-        default: 'main'
+        default: 'release'
 
 jobs:
   deploy:
@@ -21,13 +21,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.deploy_branch || github.ref_name }}
+          fetch-depth: 0
 
       - name: Setup Node 24
         uses: actions/setup-node@v3
         with:
           node-version: 24
 
-      - name: Build Docker image
+      - name: Build Docker image locally (optional)
         run: |
           cd growithus_api
           docker build -t backend .
@@ -39,6 +42,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            set -e
             mkdir -p ~/backend
             cd ~/backend
 
@@ -48,15 +52,18 @@ jobs:
               git remote add origin https://github.com/<your-username>/<repo>.git
             fi
 
-            # Pull latest code from the release branch
-            git fetch
-            git reset --hard origin/${GITHUB_REF#refs/heads/}
+            # Checkout & reset to correct branch
+            BRANCH="${{ github.event.inputs.deploy_branch || github.ref_name }}"
+            echo "🚀 Deploying branch: $BRANCH"
 
-            # Stop old container
-            # docker stop backend || true
-            # docker rm backend || true
+            git fetch origin $BRANCH
+            git checkout $BRANCH || git checkout -b $BRANCH origin/$BRANCH
+            git reset --hard origin/$BRANCH
 
-            # Stop & remove any container using port 3000
+            echo "📌 Deployed commit:"
+            git log -1 --oneline
+
+            # Stop and remove any container using port 3000
             docker ps -q --filter "publish=3000" | xargs -r docker stop
             docker ps -aq --filter "publish=3000" | xargs -r docker rm
 
@@ -64,9 +71,10 @@ jobs:
             docker rm -f backend || true
 
             # Build and run Docker container
-            docker build -t backend .
+            docker build --no-cache -t backend .
             docker run -d --name backend \
               -p 3000:3000 \
+              --restart unless-stopped \
               -e NODE_ENV=production \
               -e DB_HOST=${{ secrets.DB_HOST }} \
               -e DB_USER=${{ secrets.DB_USER }} \
@@ -74,5 +82,5 @@ jobs:
               -e DB_NAME=${{ secrets.DB_NAME }} \
               backend
 
-            # Run Sequelize migrations test
+            # Run Sequelize migrations
             docker exec backend npx sequelize-cli db:migrate
