@@ -24,6 +24,15 @@ jobs:
         with:
           ref: ${{ github.event.inputs.deploy_branch || github.ref_name }}
 
+      - name: Copy backend code to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "growithus_api"
+          target: "~/backend"
+
       - name: SSH & Deploy to EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
