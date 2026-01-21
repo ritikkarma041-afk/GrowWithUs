@@ -7,6 +7,13 @@ on:
     branches:
       - '*release*'           # Only trigger on branches with "release" in the name
 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
