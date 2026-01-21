@@ -46,12 +46,6 @@ jobs:
             mkdir -p ~/backend
             cd ~/backend
 
-            # Initialize git if needed
-            if [ ! -d ".git" ]; then
-              git init
-              git remote add origin https://github.com/<your-username>/<repo>.git
-            fi
-
             # Checkout & reset to correct branch
             BRANCH="${{ github.event.inputs.deploy_branch || github.ref_name }}"
             echo "🚀 Deploying branch: $BRANCH"
