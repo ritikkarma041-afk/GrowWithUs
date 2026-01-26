@@ -5,7 +5,7 @@ on:
     paths:
       - 'growithus_api/**'
     branches:
-      - '*release*'
+      - '*release-*'
 
   workflow_dispatch:
     inputs:
