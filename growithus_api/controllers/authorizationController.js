@@ -74,3 +74,15 @@ exports.login = async (req, res) => {
   const token = generateAccessToken(username, user.id);
   res.json({ success: true, user, token });
 };
+
+//write a method to reset password
+exports.resetPassword = async (req, res) => {
+  const { username, newPassword } = req.body;
+  const encrypted = encryptPassword(newPassword);
+  const user = await User.findOne({ where: { username } });
+  if (!user)
+    return res.status(404).json({ error: 'User not found' });
+  user.passwordHash = encrypted;
+  await user.save();
+  res.json({ success: true, message: 'Password reset successful' });
+}
